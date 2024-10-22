@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "150035681627",
+    "project_id": "hackathon24educationproject",
+    "storage_bucket": "hackathon24educationproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:150035681627:android:bd08a97cdb2a586ba5ca7e",
+        "android_client_info": {
+          "package_name": "com.toren.hackathon24educationproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcrOBvFN-tT_XSvnkNLsL1wtNWjokQkkU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
