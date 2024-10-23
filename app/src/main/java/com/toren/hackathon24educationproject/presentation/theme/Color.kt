@@ -1,4 +1,4 @@
-package com.toren.hackathon24educationproject.presentation.ui.theme
+package com.toren.hackathon24educationproject.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -83,6 +83,9 @@ dependencies {
 
     //implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6") // En son versiyonu kontrol edin
 
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.navigation.compose)
+
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     //Hilt

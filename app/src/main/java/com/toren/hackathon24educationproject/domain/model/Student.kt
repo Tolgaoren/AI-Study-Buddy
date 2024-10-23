@@ -8,5 +8,6 @@ data class Student(
     val school: School,
     val subjects: List<Subject>,
     val level: Int,
-    val badges: List<Badge>
+    val badges: List<Badge>,
+    val historyId: Int
 )
