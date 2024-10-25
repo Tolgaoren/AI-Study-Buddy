@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.ai.client.generativeai.type.Content
 import com.google.ai.client.generativeai.type.TextPart
 import com.toren.hackathon24educationproject.domain.model.Resource
-import com.toren.hackathon24educationproject.domain.repository.FirebaseRepository
+import com.toren.hackathon24educationproject.domain.repository.AuthRepository
 import com.toren.hackathon24educationproject.domain.repository.GeminiRepository
 import com.toren.hackathon24educationproject.presentation.practice.PracticeContract.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PracticeViewModel @Inject constructor(
-    private val firebaseRepository: FirebaseRepository,
+    private val authRepository: AuthRepository,
     private val geminiRepository: GeminiRepository
 ): ViewModel() {
 

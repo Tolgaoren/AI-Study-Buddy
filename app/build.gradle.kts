@@ -88,6 +88,8 @@ dependencies {
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+
     //Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)

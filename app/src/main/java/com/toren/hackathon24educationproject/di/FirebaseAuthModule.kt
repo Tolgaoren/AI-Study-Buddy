@@ -1,8 +1,8 @@
 package com.toren.hackathon24educationproject.di
 
 import com.google.firebase.auth.FirebaseAuth
-import com.toren.hackathon24educationproject.data.repository.FirebaseRepositoryImpl
-import com.toren.hackathon24educationproject.domain.repository.FirebaseRepository
+import com.toren.hackathon24educationproject.data.repository.AuthRepositoryImpl
+import com.toren.hackathon24educationproject.domain.repository.AuthRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,7 +11,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object FirebaseModule {
+object FirebaseAuthModule {
 
     @Provides
     @Singleton
@@ -19,6 +19,6 @@ object FirebaseModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseRepository(auth: FirebaseAuth): FirebaseRepository = FirebaseRepositoryImpl(auth)
+    fun provideAuthRepository(auth: FirebaseAuth): AuthRepository = AuthRepositoryImpl(auth)
 
 }

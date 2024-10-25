@@ -2,13 +2,13 @@ package com.toren.hackathon24educationproject.data.repository
 
 import com.google.firebase.auth.FirebaseAuth
 import com.toren.hackathon24educationproject.domain.model.Resource
-import com.toren.hackathon24educationproject.domain.repository.FirebaseRepository
+import com.toren.hackathon24educationproject.domain.repository.AuthRepository
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class FirebaseRepositoryImpl @Inject constructor(
+class AuthRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
-): FirebaseRepository {
+): AuthRepository {
 
     override suspend fun isUserAuthenticated(): Boolean = auth.currentUser != null
 
