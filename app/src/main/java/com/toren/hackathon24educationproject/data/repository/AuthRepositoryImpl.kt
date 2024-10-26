@@ -12,6 +12,8 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun isUserAuthenticated(): Boolean = auth.currentUser != null
 
+    override suspend fun getUserUid() = auth.uid.toString()
+
     override suspend fun signIn(email: String, password: String): Resource<Boolean> {
         return try {
             val result = auth.signInWithEmailAndPassword(email, password).await()

@@ -1,14 +1,13 @@
-package com.toren.hackathon24educationproject.presentation.sign_in
+package com.toren.hackathon24educationproject.presentation.create_classroom
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun SignIn(
+fun CreateClassroomScreen(
     modifier: Modifier = Modifier,
-    viewModel: SignInViewModel = hiltViewModel(),
-
+    viewModel: CreateClassroomViewModel = hiltViewModel()
 ) {
 
 }

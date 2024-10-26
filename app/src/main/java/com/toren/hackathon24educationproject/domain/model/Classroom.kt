@@ -1,12 +1,12 @@
 package com.toren.hackathon24educationproject.domain.model
 
 data class Classroom(
-    val id: Int,
-    val name: String,
-    val students: List<Student>,
-    val teachers: List<Teacher>,
-    val subjects: List<Subject>,
-    val school: School,
-    val grade: Grade
+    val id: Int = 0,
+    val name: String = "",
+    val students: List<Student> = listOf(),
+    val teachers: List<Teacher> = listOf(),
+    val subjects: List<Subject> = listOf(),
+    val school: School = School(),
+    val grade: Grade = Grade.GRADE_1
 )
 

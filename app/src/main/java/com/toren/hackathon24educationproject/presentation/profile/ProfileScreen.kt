@@ -1,13 +1,13 @@
-package com.toren.hackathon24educationproject.presentation.practice
+package com.toren.hackathon24educationproject.presentation.profile
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun Practice(
+fun ProfileScreen(
     modifier: Modifier = Modifier,
-    viewModel: PracticeViewModel = hiltViewModel()
-) {
+    viewModel: ProfileViewModel = hiltViewModel())
+{
 
 }

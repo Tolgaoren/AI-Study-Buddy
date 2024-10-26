@@ -1,13 +1,13 @@
-package com.toren.hackathon24educationproject.presentation.profile
+package com.toren.hackathon24educationproject.presentation.join_classroom
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun Profile(
+fun JoinClassroomScreen(
     modifier: Modifier = Modifier,
-    viewModel: ProfileViewModel = hiltViewModel())
-{
-
+    viewModel: JoinClassroomViewModel = hiltViewModel()
+) {
+    
 }

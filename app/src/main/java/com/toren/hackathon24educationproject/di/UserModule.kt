@@ -17,7 +17,7 @@ object UserModule {
     @Provides
     @Singleton
     fun provideStudent() : Student = Student(
-        id = 0,
+        id = "",
         fullName = "",
         classroom = Classroom(
             id = 0,
@@ -35,5 +35,21 @@ object UserModule {
         level = 0,
         badges = listOf(),
         historyId = 0
+    )
+
+    @Provides
+    @Singleton
+    fun provideClassroom() : Classroom = Classroom(
+        id = 0,
+        name = "",
+        students = listOf(),
+        teachers = listOf(),
+        subjects = listOf(),
+        school = School(
+            id = 0,
+            name = "",
+            city = "",
+        ),
+        grade = Grade.GRADE_1
     )
 }
