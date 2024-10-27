@@ -4,6 +4,8 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -35,6 +37,7 @@ fun SignInScreen(
     uiEvent: (SignInContract.UiEvent) -> Unit,
     onNavigateToSignUp: () -> Unit,
     onNavigateToClassroom: () -> Unit,
+    onNavigateToCreateClassroom: () -> Unit
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -53,6 +56,10 @@ fun SignInScreen(
 
                     is SignInContract.UiEffect.NavigateToClassroom -> {
                         onNavigateToClassroom()
+                    }
+
+                    is SignInContract.UiEffect.NavigateToCreateClassroom -> {
+                        onNavigateToCreateClassroom()
                     }
                 }
             }
@@ -75,6 +82,7 @@ fun SignInScreen(
                 contentAlignment = Alignment.Center
             ){
                 EmailPasswordForm(
+                    modifier = Modifier.padding(8.dp),
                     email = uiState.email,
                     password = uiState.password,
                     isLoading = uiState.isLoading,
@@ -82,8 +90,10 @@ fun SignInScreen(
                     onPasswordChange = { uiEvent(SignInContract.UiEvent.OnPasswordChange(it)) },
                     primaryButtonText = "Sign In",
                     secondaryButtonText = "Sign Up",
+                    tertiaryButtonText = "Create Classroom",
                     onPrimaryButtonClick = { uiEvent(SignInContract.UiEvent.OnSignInClick) },
-                    onSecondaryButtonClick = { uiEvent(SignInContract.UiEvent.OnSignUpClick) }
+                    onSecondaryButtonClick = { uiEvent(SignInContract.UiEvent.OnSignUpClick) },
+                    onTertiaryButtonClick = { uiEvent(SignInContract.UiEvent.OnCreateClassroomClick) },
                 )
             }
 
@@ -94,6 +104,7 @@ fun SignInScreen(
 
 @Composable
 fun EmailPasswordForm(
+    modifier: Modifier = Modifier,
     email: String,
     password: String,
     isLoading: Boolean,
@@ -101,13 +112,14 @@ fun EmailPasswordForm(
     onPasswordChange: (String) -> Unit,
     primaryButtonText: String,
     secondaryButtonText: String,
+    tertiaryButtonText: String,
     onPrimaryButtonClick: () -> Unit,
     onSecondaryButtonClick: () -> Unit,
+    onTertiaryButtonClick: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         OutlinedTextField(
             value = email,
@@ -118,6 +130,9 @@ fun EmailPasswordForm(
             modifier = Modifier
                 .alpha(if (isLoading) 0.8f else 1f)
         )
+
+        Spacer(modifier = modifier)
+
         OutlinedTextField(
             value = password,
             onValueChange = onPasswordChange,
@@ -127,6 +142,9 @@ fun EmailPasswordForm(
             modifier = Modifier
                 .alpha(if (isLoading) 0.8f else 1f)
         )
+
+        Spacer(modifier = modifier)
+
         if (isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier
@@ -137,8 +155,19 @@ fun EmailPasswordForm(
             Button(onClick = onPrimaryButtonClick) {
                 Text(primaryButtonText)
             }
-            TextButton(onClick = onSecondaryButtonClick) {
-                Text(secondaryButtonText)
+
+            Spacer(modifier = modifier)
+
+            Row (
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ){
+                TextButton(onClick = onSecondaryButtonClick) {
+                    Text(secondaryButtonText)
+                }
+                TextButton(onClick = onTertiaryButtonClick) {
+                    Text(tertiaryButtonText)
+                }
             }
         }
     }
@@ -154,8 +183,8 @@ private fun SignInPreview() {
         uiState = uiState,
         uiEffect = uiEffect,
         uiEvent = viewModel::onEvent,
-        onNavigateToSignUp = { /*TODO*/ }
-    ) {
-
-    }
+        onNavigateToSignUp = { /*TODO*/ },
+        onNavigateToClassroom = { /*TODO*/ },
+        onNavigateToCreateClassroom = { /*TODO*/ }
+    )
 }

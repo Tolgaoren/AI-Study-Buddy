@@ -1,5 +1,6 @@
 package com.toren.hackathon24educationproject.presentation.sign_up
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.toren.hackathon24educationproject.domain.model.Resource
@@ -21,8 +22,8 @@ import javax.inject.Inject
 class SignUpViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val firestoreRepository: FirestoreRepository,
-    private var student: Student
-): ViewModel() {
+    private var student: Student,
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SignUpContract.UiState())
     val uiState: StateFlow<SignUpContract.UiState> = _uiState.asStateFlow()
@@ -36,26 +37,54 @@ class SignUpViewModel @Inject constructor(
             is SignUpContract.UiEvent.OnPasswordChange -> updateUiState { copy(password = event.password) }
             is SignUpContract.UiEvent.OnSignInClick -> signIn()
             is SignUpContract.UiEvent.OnSignUpClick -> signUp()
+            is SignUpContract.UiEvent.OnClassroomCodeChange -> updateUiState { copy(classroomCode = event.code) }
             is SignUpContract.UiEvent.OnFullNameChange -> updateUiState { copy(fullName = event.name) }
+            is SignUpContract.UiEvent.OnCreateClassroomClick -> createClassroom()
         }
     }
 
     private fun signIn() = viewModelScope.launch {
         emitUiEffect(SignUpContract.UiEffect.NavigateToSignIn)
     }
+
+    private fun createClassroom() = viewModelScope.launch {
+        emitUiEffect(SignUpContract.UiEffect.NavigateToCreateClassroom)
+    }
+
     private fun signUp() = viewModelScope.launch {
         updateUiState { copy(isLoading = true) }
         when (val result = authRepository.signUp(uiState.value.email, uiState.value.password)) {
             is Resource.Loading -> updateUiState { copy(isLoading = true) }
+
             is Resource.Success -> {
-                student = Student(
-                    id = authRepository.getUserUid(),
-                    fullName = uiState.value.fullName
-                )
-                firestoreRepository.saveStudent()
+                saveStudent()
+            }
+
+            is Resource.Error -> {
+                emitUiEffect(SignUpContract.UiEffect.ShowToast(result.message.toString()))
+                updateUiState { copy(isLoading = false) }
+            }
+        }
+    }
+
+    private fun saveStudent() = viewModelScope.launch {
+        updateUiState { copy(isLoading = true) }
+        student.id = authRepository.getUserUid()
+        student.fullName = uiState.value.fullName
+        student.classroomId = uiState.value.classroomCode
+
+        when (val result = firestoreRepository.saveStudent()) {
+            is Resource.Loading -> {
+                updateUiState { copy(isLoading = true) }
+            }
+            is Resource.Success -> {
+                Log.d("Student", result.data.toString() )
                 emitUiEffect(SignUpContract.UiEffect.NavigateToClassroom)
             }
-            is Resource.Error -> emitUiEffect(SignUpContract.UiEffect.ShowToast(result.message.toString()))
+            is Resource.Error -> {
+                Log.d("Student", result.message.toString())
+                updateUiState { copy(isLoading = false) }
+            }
         }
     }
 

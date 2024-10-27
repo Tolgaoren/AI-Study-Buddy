@@ -2,7 +2,6 @@ package com.toren.hackathon24educationproject.di
 
 import com.toren.hackathon24educationproject.domain.model.Classroom
 import com.toren.hackathon24educationproject.domain.model.Grade
-import com.toren.hackathon24educationproject.domain.model.School
 import com.toren.hackathon24educationproject.domain.model.Student
 import dagger.Module
 import dagger.Provides
@@ -19,19 +18,7 @@ object UserModule {
     fun provideStudent() : Student = Student(
         id = "",
         fullName = "",
-        classroom = Classroom(
-            id = 0,
-            name = "",
-            students = listOf(),
-            teachers = listOf(),
-            subjects = listOf(),
-            school = School(
-                id = 0,
-                name = "",
-                city = "",
-            ),
-            grade = Grade.GRADE_1
-        ),
+        classroomId = "",
         level = 0,
         badges = listOf(),
         historyId = 0
@@ -40,16 +27,11 @@ object UserModule {
     @Provides
     @Singleton
     fun provideClassroom() : Classroom = Classroom(
-        id = 0,
+        id = "",
         name = "",
-        students = listOf(),
-        teachers = listOf(),
+        studentIds = listOf(),
+        teacherIds = listOf(),
         subjects = listOf(),
-        school = School(
-            id = 0,
-            name = "",
-            city = "",
-        ),
         grade = Grade.GRADE_1
     )
 }

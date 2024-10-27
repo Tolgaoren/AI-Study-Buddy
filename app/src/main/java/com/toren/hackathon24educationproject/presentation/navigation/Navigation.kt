@@ -10,7 +10,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.toren.hackathon24educationproject.presentation.classroom.ClassroomScreen
 import com.toren.hackathon24educationproject.presentation.create_classroom.CreateClassroomScreen
-import com.toren.hackathon24educationproject.presentation.join_classroom.JoinClassroomScreen
 import com.toren.hackathon24educationproject.presentation.practice.PracticeScreen
 import com.toren.hackathon24educationproject.presentation.profile.ProfileScreen
 import com.toren.hackathon24educationproject.presentation.sign_in.SignInScreen
@@ -48,7 +47,14 @@ fun Navigation(
                     navController.navigate(Screens.SignUp.route)
                 },
                 onNavigateToClassroom = {
-                    navController.navigate(BottomBarScreens.Classroom.route)
+                    navController.navigate(BottomBarScreens.Classroom.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
+                },
+                onNavigateToCreateClassroom = {
+                    navController.navigate(Screens.CreateClassroom.route)
                 }
             )
         }
@@ -64,7 +70,14 @@ fun Navigation(
                     navController.navigate(Screens.SignIn.route)
                 },
                 onNavigateToClassroom = {
-                    navController.navigate(BottomBarScreens.Classroom.route)
+                    navController.navigate(BottomBarScreens.Classroom.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
+                },
+                onNavigateToCreateClassroom = {
+                    navController.navigate(Screens.CreateClassroom.route)
                 }
             )
         }
@@ -73,9 +86,6 @@ fun Navigation(
         }
         composable(route = Screens.Profile.route) {
             ProfileScreen()
-        }
-        composable(route = Screens.JoinClassroom.route) {
-            JoinClassroomScreen()
         }
         composable(route = Screens.CreateClassroom.route) {
             CreateClassroomScreen()

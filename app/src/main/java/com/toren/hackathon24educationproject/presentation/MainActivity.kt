@@ -23,6 +23,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.toren.hackathon24educationproject.presentation.navigation.BottomBarScreens
 import com.toren.hackathon24educationproject.presentation.navigation.Navigation
+import com.toren.hackathon24educationproject.presentation.navigation.Screens
 import com.toren.hackathon24educationproject.presentation.theme.Hackathon24EducationProjectTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -48,40 +49,49 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
         BottomBarScreens.Classroom,
         BottomBarScreens.Profile
     )
+
+    val hideBottomBarRoutes = listOf(
+        Screens.SignIn.route,
+        Screens.SignUp.route,
+        Screens.CreateClassroom.route,
+    )
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     selectedItemIndex = items.indexOfFirst { it.route == currentRoute }
 
     Scaffold(
         bottomBar = {
-            NavigationBar {
-                items.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        selected = selectedItemIndex == index,
-                        onClick = {
-                            selectedItemIndex = index
-                            navController.navigate(item.route) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
+            if (currentRoute !in hideBottomBarRoutes) {
+                NavigationBar {
+                    items.forEachIndexed { index, item ->
+                        NavigationBarItem(
+                            selected = selectedItemIndex == index,
+                            onClick = {
+                                selectedItemIndex = index
+                                navController.navigate(item.route) {
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
+                            },
+                            icon = {
+                                Icon(
+                                    imageVector = if (selectedItemIndex == index) {
+                                        item.selectedIcon
+                                    } else {
+                                        item.icon
+                                    },
+                                    contentDescription = item.title
+                                )
+                            },
+                            label = {
+                                Text(text = item.title)
                             }
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = if (selectedItemIndex == index) {
-                                    item.selectedIcon
-                                } else {
-                                    item.icon
-                                },
-                                contentDescription = item.title
-                            )
-                        },
-                        label = {
-                            Text(text = item.title)
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }

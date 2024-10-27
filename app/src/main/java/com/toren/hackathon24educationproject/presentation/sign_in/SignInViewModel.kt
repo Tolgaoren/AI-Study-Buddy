@@ -40,6 +40,7 @@ class SignInViewModel @Inject constructor(
             is SignInContract.UiEvent.OnPasswordChange -> updateUiState { copy(password = event.password) }
             is SignInContract.UiEvent.OnSignInClick -> signIn()
             is SignInContract.UiEvent.OnSignUpClick -> signUp()
+            is SignInContract.UiEvent.OnCreateClassroomClick -> createClassroom()
         }
     }
 
@@ -53,13 +54,24 @@ class SignInViewModel @Inject constructor(
         updateUiState { copy(isLoading = true) }
         when (val result = authRepository.signIn(uiState.value.email, uiState.value.password)) {
             is Resource.Loading -> updateUiState { copy(isLoading = true) }
-            is Resource.Success -> emitUiEffect(SignInContract.UiEffect.NavigateToClassroom)
-            is Resource.Error -> emitUiEffect(SignInContract.UiEffect.ShowToast("Kullanıcı adı veya şifre hatalı"))
+
+            is Resource.Success -> {
+                emitUiEffect(SignInContract.UiEffect.NavigateToClassroom)
+            }
+
+            is Resource.Error -> {
+                emitUiEffect(SignInContract.UiEffect.ShowToast("Kullanıcı adı veya şifre hatalı"))
+                updateUiState { copy(isLoading = false) }
+            }
         }
     }
 
     private fun signUp() = viewModelScope.launch {
         emitUiEffect(SignInContract.UiEffect.NavigateToSignUp)
+    }
+
+    private fun createClassroom() = viewModelScope.launch {
+        emitUiEffect(SignInContract.UiEffect.NavigateToCreateClassroom)
     }
 
     private fun updateUiState(block: SignInContract.UiState.() -> SignInContract.UiState) {

@@ -9,11 +9,6 @@ sealed class Screens(
         title = "Create Classroom",
     )
 
-    object JoinClassroom : Screens(
-        route = "join_classroom",
-        title = "Join Classroom",
-    )
-
     object Practice : Screens(
         route = "practice",
         title = "Practice",

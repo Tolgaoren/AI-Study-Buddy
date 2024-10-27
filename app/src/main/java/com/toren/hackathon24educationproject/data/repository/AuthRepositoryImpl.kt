@@ -16,6 +16,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun signIn(email: String, password: String): Resource<Boolean> {
         return try {
+            Resource.Loading<Boolean>()
             val result = auth.signInWithEmailAndPassword(email, password).await()
             Resource.Success(result.user != null)
         } catch (e: Exception) {
@@ -25,6 +26,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun signOut(): Resource<Boolean> {
         return try {
+            Resource.Loading<Boolean>()
             auth.signOut()
             Resource.Success(true)
         } catch (e: Exception) {
@@ -34,6 +36,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun signUp(email: String, password: String): Resource<Boolean> {
         return try {
+            Resource.Loading<Boolean>()
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             Resource.Success(result.user != null)
         } catch (e: Exception) {

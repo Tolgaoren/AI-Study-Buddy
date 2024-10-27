@@ -13,13 +13,12 @@ class FirestoreRepositoryImpl @Inject constructor(
     private val student: Student
 ) : FirestoreRepository {
 
-
     override suspend fun saveStudent(): Resource<Boolean> {
         try {
             firestore.collection("students")
-                .document(student.classroom.school.id.toString())
-                .collection(student.classroom.id.toString())
-                .document(student.id.toString())
+                .document(student.classroomId)
+                .collection("students")
+                .document(student.id)
                 .set(student)
             return Resource.Success(true)
 
@@ -31,9 +30,10 @@ class FirestoreRepositoryImpl @Inject constructor(
     override suspend fun getStudent(): Resource<Student> {
         try {
             val document = firestore.collection("students")
-                .document(student.classroom.school.id.toString())
-                .collection(student.classroom.id.toString())
-                .document(student.id.toString()).get()
+                .document(student.classroomId)
+                .collection("students")
+                .document(student.id)
+                .get()
             val data = document.result.toObject<Student>()
             return Resource.Success(data!!)
 
@@ -45,8 +45,8 @@ class FirestoreRepositoryImpl @Inject constructor(
     override suspend fun getStudents(): Resource<List<Student>> {
         try {
             val document = firestore.collection("students")
-                .document(student.classroom.school.id.toString())
-                .collection(student.classroom.id.toString())
+                .document(student.classroomId)
+                .collection(student.id)
                 .get()
             val data = document.result.toObjects<Student>()
             return Resource.Success(data)
@@ -59,9 +59,9 @@ class FirestoreRepositoryImpl @Inject constructor(
     override suspend fun updateStudent(): Resource<Boolean> {
         try {
             firestore.collection("students")
-                .document(student.classroom.school.id.toString())
-                .collection(student.classroom.id.toString())
-                .document(student.id.toString())
+                .document(student.classroomId)
+                .collection(student.classroomId)
+                .document(student.id)
                 .set(student)
             return Resource.Success(true)
         } catch (e: Exception) {
