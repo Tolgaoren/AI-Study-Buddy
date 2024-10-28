@@ -10,7 +10,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.toren.hackathon24educationproject.presentation.classroom.ClassroomScreen
 import com.toren.hackathon24educationproject.presentation.create_classroom.CreateClassroomScreen
+import com.toren.hackathon24educationproject.presentation.create_classroom.CreateClassroomViewModel
 import com.toren.hackathon24educationproject.presentation.practice.PracticeScreen
+import com.toren.hackathon24educationproject.presentation.practice.PracticeViewModel
 import com.toren.hackathon24educationproject.presentation.profile.ProfileScreen
 import com.toren.hackathon24educationproject.presentation.sign_in.SignInScreen
 import com.toren.hackathon24educationproject.presentation.sign_in.SignInViewModel
@@ -30,7 +32,14 @@ fun Navigation(
             ClassroomScreen()
         }
         composable(route = BottomBarScreens.Practice.route) {
-            PracticeScreen()
+            val viewModel: PracticeViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val uiEffect = viewModel.uiEffect
+            PracticeScreen(
+                uiState = uiState,
+                uiEffect = uiEffect,
+                uiEvent = viewModel::onEvent
+            )
         }
         composable(route = BottomBarScreens.Profile.route) {
             ProfileScreen()
@@ -81,14 +90,31 @@ fun Navigation(
                 }
             )
         }
-        composable(route = Screens.Practice.route) {
-            PracticeScreen()
-        }
         composable(route = Screens.Profile.route) {
             ProfileScreen()
         }
         composable(route = Screens.CreateClassroom.route) {
-            CreateClassroomScreen()
+            val viewModel: CreateClassroomViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val uiEffect = viewModel.uiEffect
+            CreateClassroomScreen(
+                uiState = uiState,
+                uiEffect = uiEffect,
+                uiEvent = viewModel::onEvent,
+                onNavigateToClassroom = {
+                    navController.navigate(BottomBarScreens.Classroom.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
+                },
+                onNavigateToSignIn = {
+                    navController.navigate(Screens.SignIn.route)
+                },
+                onNavigateToSignUp = {
+                    navController.navigate(Screens.SignUp.route)
+                }
+            )
         }
     }
 }

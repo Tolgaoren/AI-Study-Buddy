@@ -38,21 +38,13 @@ fun SignUpScreen(
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             uiEffect.collect { effect ->
                 when (effect) {
-                    is SignUpContract.UiEffect.ShowToast -> {
-                        Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
-                    }
+                    is SignUpContract.UiEffect.ShowToast -> Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
 
-                    is SignUpContract.UiEffect.NavigateToSignIn -> {
-                        onNavigateToSignIn()
-                    }
+                    is SignUpContract.UiEffect.NavigateToSignIn -> onNavigateToSignIn()
 
-                    is SignUpContract.UiEffect.NavigateToClassroom -> {
-                        onNavigateToClassroom()
-                    }
+                    is SignUpContract.UiEffect.NavigateToClassroom -> onNavigateToClassroom()
 
-                    is SignUpContract.UiEffect.NavigateToCreateClassroom -> {
-                        onNavigateToCreateClassroom()
-                    }
+                    is SignUpContract.UiEffect.NavigateToCreateClassroom -> onNavigateToCreateClassroom()
                 }
             }
         }
@@ -74,21 +66,25 @@ fun SignUpScreen(
             ) {
                 SignUpForm(
                     modifier = Modifier.padding(8.dp),
-                    email = uiState.email,
-                    password = uiState.password,
-                    fullName = uiState.fullName,
-                    classroomCode = uiState.classroomCode,
+                    firstField = uiState.email,
+                    secondField = uiState.password,
+                    thirdField = uiState.fullName,
+                    fourthField = uiState.classroomCode,
                     isLoading = uiState.isLoading,
-                    onEmailChange = { uiEvent(SignUpContract.UiEvent.OnEmailChange(it)) },
-                    onPasswordChange = { uiEvent(SignUpContract.UiEvent.OnPasswordChange(it)) },
-                    onFullNameChange = { uiEvent(SignUpContract.UiEvent.OnFullNameChange(it)) },
-                    onClassroomCodeChange = {
+                    firstFieldLabel = "Classroom Code",
+                    secondFieldLabel = "Full Name",
+                    thirdFieldLabel = "Email",
+                    fourthFieldLabel = "Password",
+                    onFirstFieldChange = {
                         uiEvent(
                             SignUpContract.UiEvent.OnClassroomCodeChange(
                                 it
                             )
                         )
                     },
+                    onSecondFieldChange = { uiEvent(SignUpContract.UiEvent.OnFullNameChange(it)) },
+                    onThirdFieldChange = { uiEvent(SignUpContract.UiEvent.OnEmailChange(it)) },
+                    onFourthFieldChange = { uiEvent(SignUpContract.UiEvent.OnPasswordChange(it)) },
                     primaryButtonText = "Sign Up",
                     secondaryButtonText = "Sign In",
                     tertiaryButtonText = "Create Classroom",
@@ -104,15 +100,19 @@ fun SignUpScreen(
 @Composable
 fun SignUpForm(
     modifier: Modifier = Modifier,
-    email: String,
-    password: String,
+    firstField: String,
+    secondField: String,
+    thirdField: String,
+    fourthField: String,
     isLoading: Boolean,
-    fullName: String,
-    classroomCode: String,
-    onEmailChange: (String) -> Unit,
-    onPasswordChange: (String) -> Unit,
-    onFullNameChange: (String) -> Unit,
-    onClassroomCodeChange: (String) -> Unit,
+    firstFieldLabel: String,
+    secondFieldLabel: String,
+    thirdFieldLabel: String,
+    fourthFieldLabel: String,
+    onFirstFieldChange: (String) -> Unit,
+    onSecondFieldChange: (String) -> Unit,
+    onThirdFieldChange: (String) -> Unit,
+    onFourthFieldChange: (String) -> Unit,
     primaryButtonText: String,
     secondaryButtonText: String,
     tertiaryButtonText: String,
@@ -126,9 +126,11 @@ fun SignUpForm(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         OutlinedTextField(
-            value = classroomCode,
-            onValueChange = onClassroomCodeChange,
-            label = { Text("Classroom Code") },
+            value = firstField,
+            onValueChange = onFirstFieldChange,
+            label = {
+                Text( firstFieldLabel )
+                    },
             singleLine = true,
             enabled = !isLoading,
             modifier = Modifier
@@ -138,9 +140,11 @@ fun SignUpForm(
         Spacer(modifier = modifier)
 
         OutlinedTextField(
-            value = fullName,
-            onValueChange = onFullNameChange,
-            label = { Text("Full Name") },
+            value = secondField,
+            onValueChange = onSecondFieldChange,
+            label = {
+                Text( secondFieldLabel )
+                    },
             singleLine = true,
             enabled = !isLoading,
             modifier = Modifier
@@ -151,11 +155,13 @@ fun SignUpForm(
 
         EmailPasswordForm(
             modifier = modifier,
-            email = email,
-            password = password,
+            email = thirdField,
+            password = fourthField,
             isLoading = isLoading,
-            onEmailChange = onEmailChange,
-            onPasswordChange = onPasswordChange,
+            firstFieldLabel = thirdFieldLabel,
+            secondFieldLabel = fourthFieldLabel,
+            onEmailChange = onThirdFieldChange,
+            onPasswordChange = onFourthFieldChange,
             primaryButtonText = primaryButtonText,
             secondaryButtonText = secondaryButtonText,
             tertiaryButtonText = tertiaryButtonText,

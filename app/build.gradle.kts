@@ -98,5 +98,6 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(libs.generativeai)
-
+    implementation(libs.rive)
+    implementation(libs.startup)
 }

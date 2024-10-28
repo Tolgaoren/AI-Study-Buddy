@@ -3,6 +3,7 @@ package com.toren.hackathon24educationproject.di
 import com.toren.hackathon24educationproject.domain.model.Classroom
 import com.toren.hackathon24educationproject.domain.model.Grade
 import com.toren.hackathon24educationproject.domain.model.Student
+import com.toren.hackathon24educationproject.domain.model.Teacher
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,5 +34,13 @@ object UserModule {
         teacherIds = listOf(),
         subjects = listOf(),
         grade = Grade.GRADE_1
+    )
+
+    @Provides
+    @Singleton
+    fun provideTeacher() : Teacher = Teacher(
+        id = "",
+        fullName = "",
+        classrooms = listOf()
     )
 }

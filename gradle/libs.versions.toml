@@ -16,6 +16,8 @@ hiltAndroidCompiler = "2.51.1"
 androidxHiltLifecycleViewmodelVersion = "1.0.0-alpha03"
 generativeai = "0.7.0"
 lifecycleRuntimeComposeAndroid = "2.8.6"
+rive = "8.7.0"
+startup = "1.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,6 +49,9 @@ androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-com
 
 generativeai = { module = "com.google.ai.client.generativeai:generativeai", version.ref = "generativeai" }
 androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose-android", version.ref = "lifecycleRuntimeComposeAndroid" }
+
+rive = { group = "app.rive", name = "rive-android", version.ref = "rive" }
+startup = { group = "androidx.startup", name = "startup-runtime", version.ref = "startup" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

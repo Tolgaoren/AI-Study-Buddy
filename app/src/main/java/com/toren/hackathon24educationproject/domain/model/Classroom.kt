@@ -1,11 +1,11 @@
 package com.toren.hackathon24educationproject.domain.model
 
 data class Classroom(
-    val id: String = "",
-    val name: String = "",
-    val studentIds: List<String> = listOf(),
-    val teacherIds: List<String> = listOf(),
-    val subjects: List<String> = listOf(),
-    val grade: Grade = Grade.GRADE_1
+    var id: String = "",
+    var name: String = "",
+    var studentIds: List<String> = listOf(),
+    var teacherIds: List<String> = listOf(),
+    var subjects: List<String> = listOf(),
+    var grade: Grade = Grade.GRADE_1
 )
 

@@ -86,6 +86,8 @@ fun SignInScreen(
                     email = uiState.email,
                     password = uiState.password,
                     isLoading = uiState.isLoading,
+                    firstFieldLabel = "Email",
+                    secondFieldLabel = "Password",
                     onEmailChange = { uiEvent(SignInContract.UiEvent.OnEmailChange(it)) },
                     onPasswordChange = { uiEvent(SignInContract.UiEvent.OnPasswordChange(it)) },
                     primaryButtonText = "Sign In",
@@ -108,6 +110,8 @@ fun EmailPasswordForm(
     email: String,
     password: String,
     isLoading: Boolean,
+    firstFieldLabel: String,
+    secondFieldLabel: String,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     primaryButtonText: String,
@@ -124,7 +128,9 @@ fun EmailPasswordForm(
         OutlinedTextField(
             value = email,
             onValueChange = onEmailChange,
-            label = { Text("Email") },
+            label = {
+                Text( firstFieldLabel )
+                    },
             singleLine = true,
             enabled = !isLoading,
             modifier = Modifier
@@ -136,7 +142,9 @@ fun EmailPasswordForm(
         OutlinedTextField(
             value = password,
             onValueChange = onPasswordChange,
-            label = { Text("Password") },
+            label = {
+                Text( secondFieldLabel )
+                    },
             singleLine = true,
             enabled = !isLoading,
             modifier = Modifier
