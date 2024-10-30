@@ -1,0 +1,16 @@
+package com.toren.hackathon24educationproject.util
+
+import com.toren.hackathon24educationproject.domain.model.Classroom
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class PromptGenerator @Inject constructor(
+    private val classroom: Classroom,
+) {
+    fun generatePrompt(subject: String) : String {
+        val prompt = "Bana $subject konusunu pekiştirmem için, 4. sınıf seviyesinde bir soru sor. Soru metnini oluştururken bana cevap verir gibi sorma. Yani işte sorun gibi cümleler kurma direkt soruyu sor. Daha önce sormadığın bir soru olsun. Soru, daha önce sorduğun sorulara göre bir seviye daha zor olabilir."
+        println(prompt)
+        return prompt
+    }
+}

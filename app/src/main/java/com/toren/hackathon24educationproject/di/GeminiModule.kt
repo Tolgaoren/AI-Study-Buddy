@@ -6,7 +6,9 @@ import com.google.ai.client.generativeai.type.HarmCategory
 import com.google.ai.client.generativeai.type.SafetySetting
 import com.toren.hackathon24educationproject.BuildConfig
 import com.toren.hackathon24educationproject.data.repository.GeminiRepositoryImpl
+import com.toren.hackathon24educationproject.domain.model.History
 import com.toren.hackathon24educationproject.domain.repository.GeminiRepository
+import com.toren.hackathon24educationproject.util.PromptGenerator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,8 +35,10 @@ object GeminiModule {
     @Provides
     @Singleton
     fun provideGeminiRepository(
-        generativeModel: GenerativeModel
-    ): GeminiRepository = GeminiRepositoryImpl(generativeModel)
+        generativeModel: GenerativeModel,
+        history: History,
+        promptGenerator: PromptGenerator
+    ): GeminiRepository = GeminiRepositoryImpl(generativeModel, history, promptGenerator)
 
 
 }

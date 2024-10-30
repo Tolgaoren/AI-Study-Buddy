@@ -3,6 +3,7 @@ package com.toren.hackathon24educationproject.presentation.practice
 object PracticeContract {
     data class UiState(
         val isLoading: Boolean = false,
+        val subject: String = "",
         val question: String = "",
         val answer: String = "",
         val explanation: String = "",

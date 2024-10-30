@@ -45,7 +45,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
         mutableStateOf(0)
     }
     val items = listOf(
-        BottomBarScreens.Practice,
+        BottomBarScreens.ChooseSubject,
         BottomBarScreens.Classroom,
         BottomBarScreens.Profile
     )

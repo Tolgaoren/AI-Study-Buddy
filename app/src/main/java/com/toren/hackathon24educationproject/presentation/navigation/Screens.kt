@@ -14,6 +14,11 @@ sealed class Screens(
         title = "Profile",
     )
 
+    object Practice : Screens(
+        route = "practice/{subject}",
+        title = "practice"
+    )
+
     object SignIn : Screens(
         route = "sign_in",
         title = "Sign In",
@@ -23,5 +28,4 @@ sealed class Screens(
         route = "sign_up",
         title = "Sign Up",
     )
-
 }

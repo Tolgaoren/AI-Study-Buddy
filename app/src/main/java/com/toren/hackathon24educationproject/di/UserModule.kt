@@ -2,6 +2,7 @@ package com.toren.hackathon24educationproject.di
 
 import com.toren.hackathon24educationproject.domain.model.Classroom
 import com.toren.hackathon24educationproject.domain.model.Grade
+import com.toren.hackathon24educationproject.domain.model.History
 import com.toren.hackathon24educationproject.domain.model.Student
 import com.toren.hackathon24educationproject.domain.model.Teacher
 import dagger.Module
@@ -32,7 +33,7 @@ object UserModule {
         name = "",
         studentIds = listOf(),
         teacherIds = listOf(),
-        subjects = listOf(),
+        subjects = listOf("Çarpma", "Canlılar ve yaşam", "Coğrafya"),
         grade = Grade.GRADE_1
     )
 
@@ -43,4 +44,8 @@ object UserModule {
         fullName = "",
         classrooms = listOf()
     )
+
+    @Provides
+    @Singleton
+    fun history() : History = History(0, listOf())
 }

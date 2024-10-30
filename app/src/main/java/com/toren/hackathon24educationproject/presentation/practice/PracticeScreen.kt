@@ -1,5 +1,6 @@
 package com.toren.hackathon24educationproject.presentation.practice
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -76,7 +77,7 @@ fun PracticeScreen(
             uiEffect.collect { effect ->
                 when (effect) {
                     is PracticeContract.UiEffect.GoToBackScreen -> {}
-                    is PracticeContract.UiEffect.ShowToast -> {}
+                    is PracticeContract.UiEffect.ShowToast -> Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }

@@ -17,9 +17,9 @@ sealed class BottomBarScreens(
     val icon: ImageVector,
     val selectedIcon: ImageVector
 ) {
-    object Practice : BottomBarScreens(
-        route = "Practice",
-        title = "Practice",
+    object ChooseSubject : BottomBarScreens(
+        route = "Choose Subject",
+        title = "Choose Subject",
         icon = Icons.Outlined.PlayArrow,
         selectedIcon = Icons.Filled.PlayArrow
     )

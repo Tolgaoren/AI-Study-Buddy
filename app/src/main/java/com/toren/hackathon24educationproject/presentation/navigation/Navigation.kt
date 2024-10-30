@@ -1,13 +1,18 @@
 package com.toren.hackathon24educationproject.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.toren.hackathon24educationproject.presentation.choose_subject.ChooseSubjectScreen
+import com.toren.hackathon24educationproject.presentation.choose_subject.ChooseSubjectViewModel
 import com.toren.hackathon24educationproject.presentation.classroom.ClassroomScreen
 import com.toren.hackathon24educationproject.presentation.create_classroom.CreateClassroomScreen
 import com.toren.hackathon24educationproject.presentation.create_classroom.CreateClassroomViewModel
@@ -31,10 +36,19 @@ fun Navigation(
         composable(route = BottomBarScreens.Classroom.route) {
             ClassroomScreen()
         }
-        composable(route = BottomBarScreens.Practice.route) {
+        composable(
+            route = Screens.Practice.route + "/{subject}",
+            arguments = listOf(navArgument("subject") {
+                type = NavType.StringType
+            })
+        ) { navBackStackEntry ->
             val viewModel: PracticeViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
             val uiEffect = viewModel.uiEffect
+            val subject = navBackStackEntry.arguments?.getString("subject") ?: ""
+            LaunchedEffect (subject){
+                viewModel.setSubject(subject)
+            }
             PracticeScreen(
                 uiState = uiState,
                 uiEffect = uiEffect,
@@ -92,6 +106,19 @@ fun Navigation(
         }
         composable(route = Screens.Profile.route) {
             ProfileScreen()
+        }
+        composable(route = BottomBarScreens.ChooseSubject.route) {
+            val viewModel: ChooseSubjectViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val uiEffect = viewModel.uiEffect
+            ChooseSubjectScreen(
+                uiState = uiState,
+                uiEffect = uiEffect,
+                uiEvent = viewModel::onEvent,
+                onNavigateToPractice = { subject ->
+                    navController.navigate(Screens.Practice.route + "/$subject")
+                }
+            )
         }
         composable(route = Screens.CreateClassroom.route) {
             val viewModel: CreateClassroomViewModel = hiltViewModel()
