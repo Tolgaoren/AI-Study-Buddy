@@ -1,5 +1,6 @@
 package com.toren.hackathon24educationproject.presentation.sign_in
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.toren.hackathon24educationproject.domain.model.Resource
@@ -31,6 +32,7 @@ class SignInViewModel @Inject constructor(
     val uiEffect: Flow<SignInContract.UiEffect> by lazy { _uiEffect.receiveAsFlow() }
 
     init {
+        updateUiState { copy(isLoading = true) }
         isUserLoggedIn()
     }
 
@@ -46,8 +48,29 @@ class SignInViewModel @Inject constructor(
 
     private fun isUserLoggedIn() = viewModelScope.launch {
         if (authRepository.isUserAuthenticated()) {
-            emitUiEffect(SignInContract.UiEffect.NavigateToClassroom)
+            getUserInfo()
+        } else {
+            updateUiState { copy(isLoading = false) }
         }
+    }
+    private fun getUserInfo() = viewModelScope.launch {
+        when(val result = firestoreRepository.getStudent()) {
+            is Resource.Loading -> updateUiState { copy(isLoading = true) }
+
+            is Resource.Success -> {
+                student.id = result.data?.id ?: authRepository.getUserUid()
+                student.fullName = result.data?.fullName ?: ""
+                student.classroomId = result.data?.classroomId ?: ""
+                student.level = result.data?.level ?: 0
+                println("sign in: "+student)
+                emitUiEffect(SignInContract.UiEffect.NavigateToClassroom)
+        }
+            is Resource.Error -> {
+                Log.d("TAG", "getUserInfo: ${result.message}")
+                updateUiState { copy(isLoading = false) }
+            }
+        }
+
     }
 
     private fun signIn() = viewModelScope.launch {
@@ -56,6 +79,7 @@ class SignInViewModel @Inject constructor(
             is Resource.Loading -> updateUiState { copy(isLoading = true) }
 
             is Resource.Success -> {
+
                 emitUiEffect(SignInContract.UiEffect.NavigateToClassroom)
             }
 

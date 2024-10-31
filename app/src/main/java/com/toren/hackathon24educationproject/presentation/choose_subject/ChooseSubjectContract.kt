@@ -4,7 +4,10 @@ object ChooseSubjectContract {
     data class UiState(
         val isLoading: Boolean = false,
         val subjects: List<String> = emptyList(),
-        val error: String? = null
+        val error: String? = null,
+        val level: Int = 0,
+        val progress: Float = 0f,
+        val fullName: String = "",
     )
 
     sealed class UiEvent {

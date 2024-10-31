@@ -35,10 +35,10 @@ class SignUpViewModel @Inject constructor(
         when (event) {
             is SignUpContract.UiEvent.OnEmailChange -> updateUiState { copy(email = event.email) }
             is SignUpContract.UiEvent.OnPasswordChange -> updateUiState { copy(password = event.password) }
-            is SignUpContract.UiEvent.OnSignInClick -> signIn()
-            is SignUpContract.UiEvent.OnSignUpClick -> signUp()
             is SignUpContract.UiEvent.OnClassroomCodeChange -> updateUiState { copy(classroomCode = event.code) }
             is SignUpContract.UiEvent.OnFullNameChange -> updateUiState { copy(fullName = event.name) }
+            is SignUpContract.UiEvent.OnSignInClick -> signIn()
+            is SignUpContract.UiEvent.OnSignUpClick -> signUp()
             is SignUpContract.UiEvent.OnCreateClassroomClick -> createClassroom()
         }
     }

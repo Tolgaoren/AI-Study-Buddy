@@ -3,6 +3,7 @@ package com.toren.hackathon24educationproject.presentation.choose_subject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.toren.hackathon24educationproject.domain.model.Classroom
+import com.toren.hackathon24educationproject.domain.model.Student
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ChooseSubjectViewModel
 @Inject constructor(
-    private val classroom: Classroom
+    private val classroom: Classroom,
+    private val student: Student,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ChooseSubjectContract.UiState())
@@ -27,7 +29,14 @@ class ChooseSubjectViewModel
     val uiEffect: Flow<ChooseSubjectContract.UiEffect> by lazy { _uiEffect.receiveAsFlow() }
 
     init {
-        updateUiState { copy( subjects = classroom.subjects ) }
+        updateUiState {
+            copy(
+                subjects = classroom.subjects,
+                fullName = student.fullName,
+                level = student.level / 100,
+                progress = student.level % 100 / 100f
+            )
+        }
     }
 
     fun onEvent(event: ChooseSubjectContract.UiEvent) {

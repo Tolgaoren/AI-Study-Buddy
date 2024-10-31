@@ -15,8 +15,9 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object UserModule {
 
-    @Provides
+
     @Singleton
+    @Provides
     fun provideStudent() : Student = Student(
         id = "",
         fullName = "",
@@ -33,7 +34,7 @@ object UserModule {
         name = "",
         studentIds = listOf(),
         teacherIds = listOf(),
-        subjects = listOf("Çarpma", "Canlılar ve yaşam", "Coğrafya"),
+        subjects = listOf("Çarpma", "Canlılar ve yaşam", "Problemler"),
         grade = Grade.GRADE_1
     )
 

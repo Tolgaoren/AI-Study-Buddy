@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.toren.hackathon24educationproject.presentation.level_panel.LevelPanel
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -36,18 +37,25 @@ fun ChooseSubjectScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp),
+            .fillMaxSize(),
         ) {
+
+        LevelPanel(
+            fullName = uiState.fullName,
+            progress = uiState.progress,
+            level = uiState.level
+        )
         Text(
-            modifier = Modifier.padding(10.dp),
+            modifier = Modifier.padding(15.dp),
             text = "Subjects",
             style = TextStyle(
                 fontSize = 23.sp,
                 fontWeight = FontWeight.SemiBold,
             )
         )
-        LazyColumn {
+        LazyColumn(
+            modifier = Modifier.padding(10.dp),
+        ) {
             items(uiState.subjects) { item ->
                 SubjectItem(
                     name = item,

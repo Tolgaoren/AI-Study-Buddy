@@ -5,6 +5,7 @@ import com.toren.hackathon24educationproject.data.repository.FirestoreRepository
 import com.toren.hackathon24educationproject.domain.model.Classroom
 import com.toren.hackathon24educationproject.domain.model.Student
 import com.toren.hackathon24educationproject.domain.model.Teacher
+import com.toren.hackathon24educationproject.domain.repository.AuthRepository
 import com.toren.hackathon24educationproject.domain.repository.FirestoreRepository
 import dagger.Module
 import dagger.Provides
@@ -24,11 +25,12 @@ object FirestoreModule {
     @Singleton
     fun provideFirestoreRepository(
         firestore: FirebaseFirestore,
+        auth: AuthRepository,
         student: Student,
         classroom: Classroom,
         teacher: Teacher
     ): FirestoreRepository = FirestoreRepositoryImpl(
-        firestore, student, classroom, teacher
+        firestore, auth, student, classroom, teacher
     )
 
 }

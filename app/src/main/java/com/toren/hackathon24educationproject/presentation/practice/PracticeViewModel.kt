@@ -22,8 +22,8 @@ import javax.inject.Inject
 class PracticeViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val geminiRepository: GeminiRepository,
-    private var student: Student
-): ViewModel() {
+    private var student: Student,
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
@@ -31,8 +31,15 @@ class PracticeViewModel @Inject constructor(
     private val _uiEffect by lazy { Channel<PracticeContract.UiEffect>() }
     val uiEffect: Flow<PracticeContract.UiEffect> by lazy { _uiEffect.receiveAsFlow() }
 
-    // history
-    private val history = mutableListOf<String>()
+    init {
+        updateUiState {
+            copy(
+                fullName = student.fullName,
+                level = student.level / 100,
+                progress = student.level % 100 / 100f
+            )
+        }
+    }
 
     fun onEvent(event: PracticeContract.UiEvent) {
         when (event) {
@@ -57,6 +64,7 @@ class PracticeViewModel @Inject constructor(
             is Resource.Error -> {
                 emitUiEffect(PracticeContract.UiEffect.ShowToast(result.message ?: "Error"))
             }
+
             is Resource.Loading -> updateUiState { copy(isLoading = true) }
             is Resource.Success -> {
                 updateUiState { copy(question = result.data ?: "") }
@@ -65,7 +73,18 @@ class PracticeViewModel @Inject constructor(
     }
 
     private fun answerQuestion() = viewModelScope.launch {
+        when (val result = geminiRepository.checkAnswer(uiState.value.answer)) {
+            is Resource.Error -> {
+                emitUiEffect(PracticeContract.UiEffect.ShowToast(result.message ?: "Error"))
+            }
 
+            is Resource.Loading -> updateUiState { copy(isLoading = true) }
+
+            is Resource.Success -> {
+                updateUiState { copy(question = result.data ?: "",
+                    level = level + 20) }
+            }
+        }
     }
 
     private fun explainAnswer() = viewModelScope.launch {
@@ -79,27 +98,6 @@ class PracticeViewModel @Inject constructor(
     private fun onQuitClick() = viewModelScope.launch {
         emitUiEffect(PracticeContract.UiEffect.GoToBackScreen)
     }
-
-/*    private fun answerQuestion(subject: String, grade: Int = 4) = viewModelScope.launch {
-        _uiState.value = _uiState.value.copy(isLoading = true)
-        val result = geminiRepository.startChat(
-            prompt = "bana $subject ile ilgili $grade sınıfı seviyesinde bir soru sor",
-            history = history.map {
-                Content(
-                    role = "model",
-                    parts = listOf(TextPart(it))
-                )
-            }
-        )
-        when (result) {
-            is Resource.Error -> println(result.message)
-            is Resource.Loading -> println(result.data)
-            is Resource.Success -> {
-                updateUiState { copy(question = result.data.toString()) }
-            }
-        }
-    }*/
-
 
     private fun updateUiState(block: UiState.() -> UiState) {
         _uiState.update(block)

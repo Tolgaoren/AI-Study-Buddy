@@ -66,22 +66,16 @@ fun SignUpScreen(
             ) {
                 SignUpForm(
                     modifier = Modifier.padding(8.dp),
-                    firstField = uiState.email,
-                    secondField = uiState.password,
-                    thirdField = uiState.fullName,
-                    fourthField = uiState.classroomCode,
+                    firstField = uiState.classroomCode,
+                    secondField = uiState.fullName,
+                    thirdField = uiState.email,
+                    fourthField = uiState.password,
                     isLoading = uiState.isLoading,
                     firstFieldLabel = "Classroom Code",
                     secondFieldLabel = "Full Name",
                     thirdFieldLabel = "Email",
                     fourthFieldLabel = "Password",
-                    onFirstFieldChange = {
-                        uiEvent(
-                            SignUpContract.UiEvent.OnClassroomCodeChange(
-                                it
-                            )
-                        )
-                    },
+                    onFirstFieldChange = { uiEvent(SignUpContract.UiEvent.OnClassroomCodeChange(it)) },
                     onSecondFieldChange = { uiEvent(SignUpContract.UiEvent.OnFullNameChange(it)) },
                     onThirdFieldChange = { uiEvent(SignUpContract.UiEvent.OnEmailChange(it)) },
                     onFourthFieldChange = { uiEvent(SignUpContract.UiEvent.OnPasswordChange(it)) },

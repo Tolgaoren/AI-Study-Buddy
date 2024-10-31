@@ -11,7 +11,7 @@ interface FirestoreRepository {
 
     suspend fun getStudent(): Resource<Student>
 
-    suspend fun getStudents(): Resource<List<Student>>
+  //  suspend fun getStudents(): Resource<List<Student>>
 
     suspend fun updateStudent(): Resource<Boolean>
 
