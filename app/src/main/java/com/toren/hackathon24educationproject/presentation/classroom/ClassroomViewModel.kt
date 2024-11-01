@@ -55,11 +55,13 @@ class ClassroomViewModel @Inject constructor(
 
             is Resource.Success -> updateUiState {
                 copy(
-                    students = result.data?.map {
-                        it.copy( level = it.level / 100)
+                    students = result.data?.sortedByDescending { it.level }?.map {
+                        it.copy(
+                            level = it.level / 100
+                        )
 
                     } ?: emptyList(),
-                    isLoading = false
+                    isLoading = false,
                 )
             }
         }

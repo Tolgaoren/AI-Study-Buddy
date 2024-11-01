@@ -72,6 +72,7 @@ class SignUpViewModel @Inject constructor(
         student.id = authRepository.getUserUid()
         student.fullName = uiState.value.fullName
         student.classroomId = uiState.value.classroomCode
+        student.avatar = 1
 
         when (val result = firestoreRepository.saveStudent()) {
             is Resource.Loading -> {

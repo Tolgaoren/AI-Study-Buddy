@@ -51,7 +51,7 @@ import com.toren.hackathon24educationproject.presentation.theme.PurpleGrey100
 import com.toren.hackathon24educationproject.presentation.theme.PurpleGrey40
 import com.toren.hackathon24educationproject.presentation.theme.PurpleGrey80
 import com.toren.hackathon24educationproject.presentation.theme.PurpleGrey90
-
+import com.toren.hackathon24educationproject.presentation.theme.TextBlack
 
 
 @Composable
@@ -103,7 +103,7 @@ fun LevelPanel(
             ) {
                 Image(
                     painter = painterResource(
-                        id = R.drawable.avatar
+                        id = R.drawable.avatar1
                     ),
                     contentDescription = "Avatar",
                     modifier = Modifier.clip(CircleShape))
@@ -117,8 +117,9 @@ fun LevelPanel(
             Text(
                 text = fullName,
                 style = TextStyle(
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Normal
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = TextBlack
                 )
             )
         }
@@ -133,6 +134,8 @@ fun LevelPanel(
                     .padding(5.dp)
             )
             CustomProgressBar(
+                modifier = Modifier
+                .fillMaxWidth(0.5f),
                 progress = progress
             )
         }
@@ -186,6 +189,7 @@ fun LevelCircle(
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun CustomProgressBar(
+    modifier: Modifier,
     progress: Float,
 ) {
     val size by animateFloatAsState(
@@ -198,8 +202,7 @@ fun CustomProgressBar(
     )
     // Progress Bar
     Box(
-        modifier = Modifier
-            .fillMaxWidth(0.5f)
+        modifier = modifier
             .height(15.dp)
     ) {
         // ProgressBar arka planı

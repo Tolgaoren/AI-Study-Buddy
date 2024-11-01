@@ -1,23 +1,21 @@
-package com.toren.hackathon24educationproject.presentation.choose_subject
+package com.toren.hackathon24educationproject.presentation.profile
 
-object ChooseSubjectContract {
+import com.toren.hackathon24educationproject.domain.model.Student
+
+object ProfileContract {
     data class UiState(
         val isLoading: Boolean = false,
-        val subjects: List<String> = emptyList(),
         val error: String? = null,
+        val fullName: String = "",
+        val avatar: Int = 0,
         val level: Int = 0,
         val progress: Float = 0f,
-        val fullName: String = "",
     )
-
     sealed class UiEvent {
-        data class OnSubjectClick(val subject: String) : UiEvent()
         object Refresh : UiEvent()
     }
-
     sealed class UiEffect {
         data class ShowToast(val message: String) : UiEffect()
-        object NavigateToPractice : UiEffect()
     }
 
 }

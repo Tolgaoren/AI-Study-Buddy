@@ -62,6 +62,7 @@ class SignInViewModel @Inject constructor(
                 student.fullName = result.data?.fullName ?: ""
                 student.classroomId = result.data?.classroomId ?: ""
                 student.level = result.data?.level ?: 0
+                student.avatar = result.data?.avatar ?: 1
                 println("sign in: "+student)
                 emitUiEffect(SignInContract.UiEffect.NavigateToClassroom)
         }
@@ -79,8 +80,7 @@ class SignInViewModel @Inject constructor(
             is Resource.Loading -> updateUiState { copy(isLoading = true) }
 
             is Resource.Success -> {
-
-                emitUiEffect(SignInContract.UiEffect.NavigateToClassroom)
+                getUserInfo()
             }
 
             is Resource.Error -> {

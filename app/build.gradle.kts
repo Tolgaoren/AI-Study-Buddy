@@ -28,6 +28,7 @@ android {
         properties.load(project.rootProject.file("local.properties").inputStream())
 
         buildConfigField("String", "API_KEY", "\"${properties.getProperty("API_KEY")}\"")
+        buildConfigField("String", "STORAGE_URL", "\"${properties.getProperty("STORAGE_URL")}\"")
     }
 
     buildFeatures {

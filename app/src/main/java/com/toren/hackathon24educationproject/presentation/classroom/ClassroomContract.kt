@@ -9,6 +9,7 @@ object ClassroomContract {
         val classroom: Classroom = Classroom(),
         val error: String? = null,
         val students: List<Student> = emptyList(),
+        val url: String = ""
         )
     sealed class UiEvent {
 

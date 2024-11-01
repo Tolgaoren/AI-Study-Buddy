@@ -6,6 +6,7 @@ import com.toren.hackathon24educationproject.common.Constants
 import com.toren.hackathon24educationproject.domain.model.Resource
 import com.toren.hackathon24educationproject.domain.model.Student
 import com.toren.hackathon24educationproject.domain.repository.AuthRepository
+import com.toren.hackathon24educationproject.domain.repository.FirestoreRepository
 import com.toren.hackathon24educationproject.domain.repository.GeminiRepository
 import com.toren.hackathon24educationproject.presentation.practice.PracticeContract.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,6 +26,7 @@ class PracticeViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val geminiRepository: GeminiRepository,
     private var student: Student,
+    private val firestoreRepository: FirestoreRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
@@ -98,8 +100,14 @@ class PracticeViewModel @Inject constructor(
                     if (isAnswerFalse) {
                         updateUiState { copy(isAnswerCorrect = false) }
                     } else {
-                        updateUiState { copy(isAnswerCorrect = true) }
                         student.level += 20
+                        updateUiState {
+                            copy(
+                                isAnswerCorrect = true,
+                                level = student.level / 100,
+                                progress = student.level % 100 / 100f
+                            )
+                        }
                     }
                 }
             }
@@ -119,7 +127,17 @@ class PracticeViewModel @Inject constructor(
     }
 
     private fun onQuitClick() = viewModelScope.launch {
-        emitUiEffect(PracticeContract.UiEffect.GoToBackScreen)
+        when (val result = firestoreRepository.updateStudent()) {
+            is Resource.Error -> {
+                emitUiEffect(PracticeContract.UiEffect.ShowToast(result.message ?: "Error"))
+            }
+            is Resource.Loading -> {
+                updateUiState { copy(isLoading = true) }
+            }
+            is Resource.Success -> {
+                updateUiState { copy(isLoading = false) }
+            }
+        }
     }
 
     private fun updateUiState(block: UiState.() -> UiState) {

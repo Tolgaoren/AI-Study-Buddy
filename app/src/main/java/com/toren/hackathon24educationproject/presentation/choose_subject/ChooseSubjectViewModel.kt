@@ -29,6 +29,17 @@ class ChooseSubjectViewModel
     val uiEffect: Flow<ChooseSubjectContract.UiEffect> by lazy { _uiEffect.receiveAsFlow() }
 
     init {
+        refresh()
+    }
+
+    fun onEvent(event: ChooseSubjectContract.UiEvent) {
+        when (event) {
+            is ChooseSubjectContract.UiEvent.OnSubjectClick -> onSubjectClick()
+            is ChooseSubjectContract.UiEvent.Refresh -> refresh()
+        }
+    }
+
+    private fun refresh() = viewModelScope.launch {
         updateUiState {
             copy(
                 subjects = classroom.subjects,
@@ -36,12 +47,6 @@ class ChooseSubjectViewModel
                 level = student.level / 100,
                 progress = student.level % 100 / 100f
             )
-        }
-    }
-
-    fun onEvent(event: ChooseSubjectContract.UiEvent) {
-        when (event) {
-            is ChooseSubjectContract.UiEvent.OnSubjectClick -> onSubjectClick()
         }
     }
 

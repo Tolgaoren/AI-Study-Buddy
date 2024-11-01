@@ -20,6 +20,7 @@ import com.toren.hackathon24educationproject.presentation.create_classroom.Creat
 import com.toren.hackathon24educationproject.presentation.practice.PracticeScreen
 import com.toren.hackathon24educationproject.presentation.practice.PracticeViewModel
 import com.toren.hackathon24educationproject.presentation.profile.ProfileScreen
+import com.toren.hackathon24educationproject.presentation.profile.ProfileViewModel
 import com.toren.hackathon24educationproject.presentation.sign_in.SignInScreen
 import com.toren.hackathon24educationproject.presentation.sign_in.SignInViewModel
 import com.toren.hackathon24educationproject.presentation.sign_up.SignUpScreen
@@ -64,7 +65,14 @@ fun Navigation(
             )
         }
         composable(route = BottomBarScreens.Profile.route) {
-            ProfileScreen()
+            val viewModel: ProfileViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val uiEffect = viewModel.uiEffect
+            ProfileScreen(
+                uiState = uiState,
+                uiEffect = uiEffect,
+                uiEvent = viewModel::onEvent
+            )
         }
         composable(route = Screens.SignIn.route) {
             val viewModel: SignInViewModel = hiltViewModel()
@@ -111,9 +119,6 @@ fun Navigation(
                     navController.navigate(Screens.CreateClassroom.route)
                 }
             )
-        }
-        composable(route = Screens.Profile.route) {
-            ProfileScreen()
         }
         composable(route = BottomBarScreens.ChooseSubject.route) {
             val viewModel: ChooseSubjectViewModel = hiltViewModel()

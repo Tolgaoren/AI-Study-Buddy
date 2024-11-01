@@ -24,7 +24,8 @@ object UserModule {
         classroomId = "",
         level = 0,
         badges = listOf(),
-        historyId = 0
+        historyId = 0,
+        avatar = 1
     )
 
     @Provides

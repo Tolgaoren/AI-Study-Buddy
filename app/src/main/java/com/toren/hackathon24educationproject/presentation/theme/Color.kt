@@ -18,3 +18,5 @@ val Pink40 = Color(0xFF7D5260)
 
 val Blue40 = Color(0xFF273846)
 val Blue20 = Color(0xFF273846)
+
+val TextBlack = Color(0xFF15181B)

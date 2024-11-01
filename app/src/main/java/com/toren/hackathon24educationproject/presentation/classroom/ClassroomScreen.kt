@@ -15,11 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,15 +28,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.toren.hackathon24educationproject.R
-import com.toren.hackathon24educationproject.presentation.choose_subject.SubjectItem
 import com.toren.hackathon24educationproject.presentation.level_panel.LevelCircle
 import com.toren.hackathon24educationproject.presentation.theme.BLue200
 import com.toren.hackathon24educationproject.presentation.theme.Blue400
 import com.toren.hackathon24educationproject.presentation.theme.Blue80
-import com.toren.hackathon24educationproject.presentation.theme.Purple200
-import com.toren.hackathon24educationproject.presentation.theme.PurpleGrey80
+import com.toren.hackathon24educationproject.presentation.theme.TextBlack
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -52,14 +45,27 @@ fun ClassroomScreen(
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
-        Text(
-            modifier = Modifier.padding(15.dp),
-            text = "Sıralama",
-            style = TextStyle(
-                fontSize = 23.sp,
-                fontWeight = FontWeight.SemiBold,
+        Row (
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Image(
+                painter = painterResource(
+                id = R.drawable.ranking_icon),
+                contentDescription = "Ranking Icon",
+                modifier = Modifier
+                    .size(50.dp)
+                    .padding(start = 15.dp)
             )
-        )
+            Text(
+                modifier = Modifier.padding(15.dp),
+                text = "En yüksek seviyeler",
+                style = TextStyle(
+                    color = TextStyle.Default.color,
+                    fontSize = 21.sp,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            )
+        }
         LazyColumn(
             modifier = Modifier.padding(10.dp),
         ) {
@@ -68,7 +74,8 @@ fun ClassroomScreen(
                 StudentItem(
                     name = item.fullName,
                     level = item.level,
-                    rank = rank
+                    rank = rank,
+                    avatar = item.avatar
                 )
             }
         }
@@ -80,11 +87,12 @@ fun StudentItem(
     name: String,
     level: Int,
     rank: Int,
+    avatar: Int
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp),
+            .padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
         shape = RoundedCornerShape(25.dp)
     ) {
         Row(modifier = Modifier
@@ -107,7 +115,8 @@ fun StudentItem(
                     .padding(18.dp),
                 style = TextStyle(
                     fontSize = 17.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = TextBlack
                 )
             )
             Card(
@@ -138,12 +147,18 @@ fun StudentItem(
                             verticalAlignment = Alignment.CenterVertically
                         ){
                             Image(
-                                painter = painterResource(
-                                    id = R.drawable.avatar
-                                ),
-                                contentDescription = "Avatar",
-                                modifier = Modifier.clip(CircleShape).size(30.dp)
-                            )
+                            painter = painterResource(
+                                id = when (avatar) {
+                                    1 -> R.drawable.avatar1
+                                    2 -> R.drawable.avatar2
+                                    3 -> R.drawable.avatar3
+                                    4 -> R.drawable.avatar4
+                                    else -> R.drawable.avatar1
+                                }
+                            ),
+                            contentDescription = "Avatar",
+                            modifier = Modifier.clip(CircleShape).size(30.dp)
+                        )
 
                             Spacer(
                                 modifier = Modifier.width(10.dp)
@@ -153,7 +168,8 @@ fun StudentItem(
                                 text = name,
                                 style = TextStyle(
                                     fontSize = 17.sp,
-                                    fontWeight = FontWeight.SemiBold
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = TextBlack
                                 )
                             )
                         }
