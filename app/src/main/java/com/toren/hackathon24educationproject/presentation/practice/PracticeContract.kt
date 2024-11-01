@@ -6,7 +6,6 @@ object PracticeContract {
         val subject: String = "",
         val question: String = "",
         val answer: String = "",
-        val explanation: String = "",
         val isAnswerFocused: Boolean = false,
         val isAnswerCorrect: Boolean? = null,
         val error: String? = null,
@@ -18,9 +17,7 @@ object PracticeContract {
     sealed class UiEvent {
         data class OnQuestionChange(val question: String) : UiEvent()
         data class OnAnswerChange(val answer: String) : UiEvent()
-        data class OnExplanationChange(val explanation: String) : UiEvent()
         data object OnAnswerClick : UiEvent()
-        data object OnExplainClick : UiEvent()
         data object OnNextClick : UiEvent()
         data object OnQuitClick : UiEvent()
         data object OnAnswerFocused : UiEvent()

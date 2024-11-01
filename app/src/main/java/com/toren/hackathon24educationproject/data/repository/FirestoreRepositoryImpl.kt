@@ -3,7 +3,6 @@ package com.toren.hackathon24educationproject.data.repository
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
-import com.google.firebase.firestore.toObjects
 import com.toren.hackathon24educationproject.domain.model.Classroom
 import com.toren.hackathon24educationproject.domain.model.Resource
 import com.toren.hackathon24educationproject.domain.model.Student
@@ -27,6 +26,7 @@ class FirestoreRepositoryImpl @Inject constructor(
                 .collection("students")
                 .document(student.id)
                 .set(student)
+                .await()
             return Resource.Success(true)
 
         } catch (e: Exception) {
@@ -49,21 +49,22 @@ class FirestoreRepositoryImpl @Inject constructor(
             return Resource.Error(e.message ?: "Unknown error occurred")
         }
     }
-/*
+
     override suspend fun getStudents(): Resource<List<Student>> {
         try {
-            val document = firestore.collection("students")
-                .document(student.classroomId)
-                .collection("students")
-                .document(student.id)
+            val querySnapshot = firestore.collection("students")
+                .whereEqualTo("classroomId", student.classroomId)
                 .get()
-            val data = docu
-            return Resource.Success(data)
+                .await()
+            val studentList = querySnapshot.documents.map { document ->
+                document.toObject(Student::class.java)!!
+            }
+            return Resource.Success(studentList)
 
         } catch (e: Exception) {
             return Resource.Error(e.message ?: "Unknown error occurred")
         }
-    }*/
+    }
 
     override suspend fun updateStudent(): Resource<Boolean> {
         try {

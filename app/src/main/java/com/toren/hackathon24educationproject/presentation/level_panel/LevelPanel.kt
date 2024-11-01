@@ -1,11 +1,15 @@
 package com.toren.hackathon24educationproject.presentation.level_panel
 
+import android.annotation.SuppressLint
+import android.graphics.drawable.Icon
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,23 +25,33 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.toren.hackathon24educationproject.R
 import com.toren.hackathon24educationproject.presentation.theme.Blue40
+import com.toren.hackathon24educationproject.presentation.theme.Blue400
 import com.toren.hackathon24educationproject.presentation.theme.Purple200
 import com.toren.hackathon24educationproject.presentation.theme.PurpleGrey100
 import com.toren.hackathon24educationproject.presentation.theme.PurpleGrey40
 import com.toren.hackathon24educationproject.presentation.theme.PurpleGrey80
 import com.toren.hackathon24educationproject.presentation.theme.PurpleGrey90
+
 
 
 @Composable
@@ -49,19 +63,65 @@ fun LevelPanel(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Blue40)
-            .padding(start= 20.dp, top = 15.dp, bottom = 15.dp, end = 20.dp),
+            .background(
+                if (isSystemInDarkTheme()) Blue40 else Blue400
+            )
+            .padding(start = 20.dp, top = 15.dp, bottom = 15.dp, end = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = fullName,
-            style = TextStyle(
-                fontSize = 20.sp,
-                color = Color.White,
-                fontWeight = FontWeight.SemiBold
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(30.dp)
+                    .background(
+                        if (isSystemInDarkTheme()) {
+                            Brush.linearGradient(
+                                listOf(
+                                    PurpleGrey40,
+                                    PurpleGrey100
+                                )
+                            )
+                        } else {
+                            Brush.linearGradient(
+                                listOf(
+                                    PurpleGrey80,
+                                    Color.White
+                                )
+                            )
+                        },
+                        shape = CircleShape
+                    )
+                    .border(
+                        width = 1.dp,
+                        color = if (isSystemInDarkTheme()) PurpleGrey100 else Purple200,
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center,
+            ) {
+                Image(
+                    painter = painterResource(
+                        id = R.drawable.avatar
+                    ),
+                    contentDescription = "Avatar",
+                    modifier = Modifier.clip(CircleShape))
+            }
+
+            Spacer(
+                modifier = Modifier
+                    .padding(5.dp)
+            )
+
+            Text(
+                text = fullName,
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Normal
                 )
             )
+        }
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -81,17 +141,33 @@ fun LevelPanel(
 
 @Composable
 fun LevelCircle(
+    modifier: Modifier = Modifier,
     level: Int,
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(30.dp)
             .background(
-                color = PurpleGrey40,
-                shape = CircleShape)
+                if (isSystemInDarkTheme()) {
+                    Brush.linearGradient(
+                        listOf(
+                            PurpleGrey40,
+                            PurpleGrey100
+                        )
+                    )
+                } else {
+                    Brush.linearGradient(
+                        listOf(
+                            PurpleGrey80,
+                            Color.White
+                        )
+                    )
+                },
+                shape = CircleShape
+            )
             .border(
-                width = 2.dp,
-                color = PurpleGrey100,
+                width = 1.dp,
+                color = if (isSystemInDarkTheme()) PurpleGrey100 else Purple200,
                 shape = CircleShape
             ),
         contentAlignment = Alignment.Center
@@ -107,6 +183,7 @@ fun LevelCircle(
 }
 
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun CustomProgressBar(
     progress: Float,
@@ -123,14 +200,21 @@ fun CustomProgressBar(
     Box(
         modifier = Modifier
             .fillMaxWidth(0.5f)
-            .height(17.dp)
+            .height(15.dp)
     ) {
         // ProgressBar arka planı
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(9.dp))
-                .background(PurpleGrey90)
+                .background(
+                    Brush.verticalGradient(
+                        listOf(
+                            PurpleGrey100,
+                            PurpleGrey90
+                        )
+                    )
+                )
         )
         // ProgressBar ilerleme kısmı
         Box(
@@ -138,7 +222,14 @@ fun CustomProgressBar(
                 .fillMaxWidth(size)  // İlerleme animasyona göre değişir
                 .fillMaxHeight()
                 .clip(RoundedCornerShape(9.dp))
-                .background(Purple200)
+                .background(
+                    Brush.verticalGradient(
+                        listOf(
+                            PurpleGrey80,
+                            Color.White
+                        )
+                    )
+                )
                 .animateContentSize()
         )
 

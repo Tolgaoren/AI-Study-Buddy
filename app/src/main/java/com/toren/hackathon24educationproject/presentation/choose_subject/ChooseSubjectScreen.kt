@@ -1,5 +1,6 @@
 package com.toren.hackathon24educationproject.presentation.choose_subject
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +17,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -23,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.toren.hackathon24educationproject.presentation.level_panel.LevelPanel
+import com.toren.hackathon24educationproject.presentation.theme.Purple200
+import com.toren.hackathon24educationproject.presentation.theme.PurpleGrey80
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -32,9 +37,6 @@ fun ChooseSubjectScreen(
     uiEvent: (ChooseSubjectContract.UiEvent) -> Unit,
     onNavigateToPractice: (Any?) -> Unit
 ) {
-    val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
-
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -47,14 +49,14 @@ fun ChooseSubjectScreen(
         )
         Text(
             modifier = Modifier.padding(15.dp),
-            text = "Subjects",
+            text = "Konular",
             style = TextStyle(
                 fontSize = 23.sp,
                 fontWeight = FontWeight.SemiBold,
             )
         )
         LazyColumn(
-            modifier = Modifier.padding(10.dp),
+            modifier = Modifier
         ) {
             items(uiState.subjects) { item ->
                 SubjectItem(
@@ -73,26 +75,41 @@ fun SubjectItem(
     onClick: () -> Unit
 ) {
     Card(
-        modifier = modifier.fillMaxWidth(),
-        onClick = onClick
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(10.dp),
+        onClick = onClick,
     ) {
         Row(
             modifier = modifier
-                .padding(10.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .background(
+                    Brush.verticalGradient(
+                    listOf(
+                        Purple200,
+                        PurpleGrey80,
+                        PurpleGrey80,
+                        PurpleGrey80,
+                        Purple200
+                    )
+                )),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = name,
                 modifier = modifier
-                    .padding(start = 10.dp)
+                    .padding(16.dp),
+                style = TextStyle(
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
             )
             Icon(
                 imageVector = Icons.Filled.PlayArrow,
                 contentDescription = "Play Icon",
                 modifier = modifier
-                    .padding(end = 10.dp)
+                    .padding(16.dp)
             )
         }
 

@@ -48,7 +48,7 @@ class GeminiRepositoryImpl @Inject constructor(
             val chat = Resource.Success(
                 generativeModel.startChat(
                     history = history.history
-                ).sendMessage(answer).text.toString()
+                ).sendMessage(prompt).text.toString()
             )
             val newContent = listOf(
                 Content("USER", listOf(TextPart(answer)) ),

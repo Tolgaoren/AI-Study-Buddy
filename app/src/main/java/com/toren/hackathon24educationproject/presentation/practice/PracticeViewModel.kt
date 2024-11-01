@@ -2,6 +2,7 @@ package com.toren.hackathon24educationproject.presentation.practice
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.toren.hackathon24educationproject.common.Constants
 import com.toren.hackathon24educationproject.domain.model.Resource
 import com.toren.hackathon24educationproject.domain.model.Student
 import com.toren.hackathon24educationproject.domain.repository.AuthRepository
@@ -9,6 +10,7 @@ import com.toren.hackathon24educationproject.domain.repository.GeminiRepository
 import com.toren.hackathon24educationproject.presentation.practice.PracticeContract.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -46,9 +48,7 @@ class PracticeViewModel @Inject constructor(
             is PracticeContract.UiEvent.OnAnswerChange -> updateUiState { copy(answer = event.answer) }
             is PracticeContract.UiEvent.OnQuestionChange -> updateUiState { copy(question = event.question) }
             is PracticeContract.UiEvent.OnAnswerFocused -> updateUiState { copy(isAnswerFocused = !isAnswerFocused) }
-            is PracticeContract.UiEvent.OnExplanationChange -> updateUiState { copy(explanation = event.explanation) }
             is PracticeContract.UiEvent.OnAnswerClick -> answerQuestion()
-            is PracticeContract.UiEvent.OnExplainClick -> explainAnswer()
             is PracticeContract.UiEvent.OnNextClick -> nextQuestion()
             is PracticeContract.UiEvent.OnQuitClick -> onQuitClick()
         }
@@ -56,16 +56,17 @@ class PracticeViewModel @Inject constructor(
 
     fun setSubject(subject: String) {
         updateUiState { copy(subject = subject) }
-        askQuestion(subject)
+        askQuestion()
     }
 
-    private fun askQuestion(subject: String) = viewModelScope.launch {
-        when (val result = geminiRepository.startChat(subject)) {
+    private fun askQuestion() = viewModelScope.launch {
+        when (val result = geminiRepository.startChat(subject = uiState.value.subject)) {
             is Resource.Error -> {
                 emitUiEffect(PracticeContract.UiEffect.ShowToast(result.message ?: "Error"))
             }
 
             is Resource.Loading -> updateUiState { copy(isLoading = true) }
+
             is Resource.Success -> {
                 updateUiState { copy(question = result.data ?: "") }
             }
@@ -76,23 +77,45 @@ class PracticeViewModel @Inject constructor(
         when (val result = geminiRepository.checkAnswer(uiState.value.answer)) {
             is Resource.Error -> {
                 emitUiEffect(PracticeContract.UiEffect.ShowToast(result.message ?: "Error"))
+                updateUiState { copy(answer = "") }
             }
 
             is Resource.Loading -> updateUiState { copy(isLoading = true) }
 
             is Resource.Success -> {
-                updateUiState { copy(question = result.data ?: "",
-                    level = level + 20) }
+                updateUiState {
+                    copy(
+                        question = result.data ?: "",
+                        level = student.level / 100,
+                        progress = student.level % 100 / 100f,
+                        answer = ""
+                    )
+                }
+                result.data?.let {
+                    val isAnswerFalse: Boolean = Constants.WRONG_ANSWER_MESSAGES.any { word ->
+                        result.data.contains(word, ignoreCase = true)
+                    }
+                    if (isAnswerFalse) {
+                        updateUiState { copy(isAnswerCorrect = false) }
+                    } else {
+                        updateUiState { copy(isAnswerCorrect = true) }
+                        student.level += 20
+                    }
+                }
             }
         }
     }
 
-    private fun explainAnswer() = viewModelScope.launch {
-
-    }
-
     private fun nextQuestion() = viewModelScope.launch {
-
+        updateUiState {
+            copy(
+                question = "",
+                answer = "",
+                isAnswerCorrect = null,
+                isAnswerFocused = false
+            )
+        }
+        askQuestion()
     }
 
     private fun onQuitClick() = viewModelScope.launch {

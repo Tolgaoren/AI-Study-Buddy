@@ -15,6 +15,6 @@ class PromptGenerator @Inject constructor(
     }
 
     fun checkAnswerPrompt(answer: String) : String {
-        return "Son sorduğun soruya cevabım $answer."
+        return "Son sorduğun soruya cevabım $answer. Bana cevap doğruysa doğru, yanlışsa yanlış yaz. Hemen hemen doğru vs. deme. Daha sonra çözümü anlat."
     }
 }

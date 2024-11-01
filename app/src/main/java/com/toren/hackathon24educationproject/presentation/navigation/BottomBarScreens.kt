@@ -19,21 +19,21 @@ sealed class BottomBarScreens(
 ) {
     object ChooseSubject : BottomBarScreens(
         route = "Choose Subject",
-        title = "Choose Subject",
+        title = "Alıştırma",
         icon = Icons.Outlined.PlayArrow,
         selectedIcon = Icons.Filled.PlayArrow
     )
 
     object Classroom : BottomBarScreens(
         route = "Classroom",
-        title = "Classroom",
+        title = "Sınıfım",
         icon = Icons.Outlined.Menu,
         selectedIcon = Icons.Filled.Menu
     )
 
     object Profile : BottomBarScreens(
         route = "Profile",
-        title = "Profile",
+        title = "Profilim",
         icon = Icons.Outlined.Person,
         selectedIcon = Icons.Filled.Person
 

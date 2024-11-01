@@ -4,7 +4,7 @@ data class Student(
     var id: String = "",
     var fullName: String = "",
     var classroomId: String = "",
-    var level: Int = 1250,
+    var level: Int = 0,
     var badges: List<Badge> = listOf(),
     var historyId: Int = 0
 )

@@ -14,6 +14,7 @@ import androidx.navigation.navArgument
 import com.toren.hackathon24educationproject.presentation.choose_subject.ChooseSubjectScreen
 import com.toren.hackathon24educationproject.presentation.choose_subject.ChooseSubjectViewModel
 import com.toren.hackathon24educationproject.presentation.classroom.ClassroomScreen
+import com.toren.hackathon24educationproject.presentation.classroom.ClassroomViewModel
 import com.toren.hackathon24educationproject.presentation.create_classroom.CreateClassroomScreen
 import com.toren.hackathon24educationproject.presentation.create_classroom.CreateClassroomViewModel
 import com.toren.hackathon24educationproject.presentation.practice.PracticeScreen
@@ -34,7 +35,14 @@ fun Navigation(
         startDestination = Screens.SignIn.route)
     {
         composable(route = BottomBarScreens.Classroom.route) {
-            ClassroomScreen()
+            val viewModel: ClassroomViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val uiEffect = viewModel.uiEffect
+            ClassroomScreen(
+                uiState = uiState,
+                uiEffect = uiEffect,
+                uiEvent = viewModel::onEvent
+            )
         }
         composable(
             route = Screens.Practice.route + "/{subject}",
