@@ -1,6 +1,5 @@
 package com.toren.hackathon24educationproject.presentation.profile
 
-import com.toren.hackathon24educationproject.domain.model.Student
 
 object ProfileContract {
     data class UiState(
