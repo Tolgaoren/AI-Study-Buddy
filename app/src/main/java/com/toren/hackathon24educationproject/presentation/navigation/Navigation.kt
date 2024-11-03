@@ -25,6 +25,8 @@ import com.toren.hackathon24educationproject.presentation.sign_in.SignInScreen
 import com.toren.hackathon24educationproject.presentation.sign_in.SignInViewModel
 import com.toren.hackathon24educationproject.presentation.sign_up.SignUpScreen
 import com.toren.hackathon24educationproject.presentation.sign_up.SignUpViewModel
+import com.toren.hackathon24educationproject.presentation.subject_explanation.SubjectExplanationScreen
+import com.toren.hackathon24educationproject.presentation.subject_explanation.SubjectExplanationViewModel
 
 @Composable
 fun Navigation(
@@ -42,7 +44,10 @@ fun Navigation(
             ClassroomScreen(
                 uiState = uiState,
                 uiEffect = uiEffect,
-                uiEvent = viewModel::onEvent
+                uiEvent = viewModel::onEvent,
+                onNavigateToSubjectExplanation = { subject ->
+                    navController.navigate(Screens.SubjectExplanation.route + "/$subject")
+                }
             )
         }
         composable(
@@ -68,10 +73,17 @@ fun Navigation(
             val viewModel: ProfileViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
             val uiEffect = viewModel.uiEffect
+
             ProfileScreen(
                 uiState = uiState,
                 uiEffect = uiEffect,
-                uiEvent = viewModel::onEvent
+                uiEvent = viewModel::onEvent,
+                onNavigateToSignIn = {
+                    navController.navigate(Screens.SignIn.route) {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
             )
         }
         composable(route = Screens.SignIn.route) {
@@ -155,6 +167,24 @@ fun Navigation(
                     navController.navigate(Screens.SignUp.route)
                 }
             )
+        }
+        composable(route = Screens.SubjectExplanation.route + "/{subject}",
+            arguments = listOf(navArgument("subject") {
+                type = NavType.StringType
+            })) {navBackStackEntry ->
+            val viewModel: SubjectExplanationViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val uiEffect = viewModel.uiEffect
+            val subject = navBackStackEntry.arguments?.getString("subject") ?: ""
+            LaunchedEffect (subject){
+                viewModel.setSubject(subject)
+            }
+            SubjectExplanationScreen(
+                uiState = uiState,
+                uiEffect = uiEffect,
+                uiEvent = viewModel::onEvent
+            )
+
         }
     }
 }

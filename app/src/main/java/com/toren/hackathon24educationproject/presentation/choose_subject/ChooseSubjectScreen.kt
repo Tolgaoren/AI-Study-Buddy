@@ -27,9 +27,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.toren.hackathon24educationproject.R
-import com.toren.hackathon24educationproject.presentation.level_panel.LevelPanel
+import com.toren.hackathon24educationproject.presentation.components.LevelPanel
 import com.toren.hackathon24educationproject.presentation.theme.Purple200
 import com.toren.hackathon24educationproject.presentation.theme.PurpleGrey80
+import com.toren.hackathon24educationproject.presentation.theme.TextBlack
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -125,14 +126,16 @@ fun SubjectItem(
                     .padding(16.dp),
                 style = TextStyle(
                     fontSize = 17.sp,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    color = TextBlack
                 )
             )
             Icon(
                 imageVector = Icons.Filled.PlayArrow,
                 contentDescription = "Play Icon",
                 modifier = modifier
-                    .padding(16.dp)
+                    .padding(16.dp),
+                tint = TextBlack
             )
         }
 

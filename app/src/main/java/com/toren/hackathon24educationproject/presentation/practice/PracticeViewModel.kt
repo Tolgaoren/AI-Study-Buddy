@@ -56,7 +56,12 @@ class PracticeViewModel @Inject constructor(
     }
 
     fun setSubject(subject: String) {
-        updateUiState { copy(subject = subject) }
+        updateUiState {
+            copy(
+                subject = subject,
+                isLoading = true
+            )
+        }
         askQuestion()
     }
 
@@ -69,7 +74,12 @@ class PracticeViewModel @Inject constructor(
             is Resource.Loading -> updateUiState { copy(isLoading = true) }
 
             is Resource.Success -> {
-                updateUiState { copy(question = result.data ?: "") }
+                updateUiState {
+                    copy(
+                        isLoading = false,
+                        question = result.data ?: ""
+                    )
+                }
             }
         }
     }
@@ -119,7 +129,8 @@ class PracticeViewModel @Inject constructor(
                 question = "",
                 answer = "",
                 isAnswerCorrect = null,
-                isAnswerFocused = false
+                isAnswerFocused = false,
+                isLoading = true
             )
         }
         askQuestion()

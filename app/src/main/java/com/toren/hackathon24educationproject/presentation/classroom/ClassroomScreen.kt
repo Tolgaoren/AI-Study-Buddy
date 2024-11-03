@@ -1,9 +1,9 @@
 package com.toren.hackathon24educationproject.presentation.classroom
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,7 +29,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.toren.hackathon24educationproject.R
-import com.toren.hackathon24educationproject.presentation.level_panel.LevelCircle
+import com.toren.hackathon24educationproject.presentation.choose_subject.SubjectItem
+import com.toren.hackathon24educationproject.presentation.components.LevelCircle
 import com.toren.hackathon24educationproject.presentation.theme.BLue200
 import com.toren.hackathon24educationproject.presentation.theme.Blue400
 import com.toren.hackathon24educationproject.presentation.theme.Blue80
@@ -41,44 +42,63 @@ fun ClassroomScreen(
     uiState: ClassroomContract.UiState,
     uiEffect: Flow<ClassroomContract.UiEffect>,
     uiEvent: (ClassroomContract.UiEvent) -> Unit,
+    onNavigateToSubjectExplanation: (Any?) -> Unit,
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp)
     ) {
-        Row (
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            Image(
-                painter = painterResource(
-                id = R.drawable.ranking_icon),
-                contentDescription = "Ranking Icon",
-                modifier = Modifier
-                    .size(50.dp)
-                    .padding(start = 15.dp)
-            )
-            Text(
-                modifier = Modifier.padding(15.dp),
-                text = "En yüksek seviyeler",
-                style = TextStyle(
-                    color = TextStyle.Default.color,
-                    fontSize = 21.sp,
-                    fontWeight = FontWeight.SemiBold,
-                )
+        item { SectionHeader(icon = R.drawable.ranking_icon, title = "En yüksek seviyeler") }
+
+        items(uiState.students) { student ->
+            val rank = uiState.students.indexOf(student) + 1
+            StudentItem(
+                name = student.fullName,
+                level = student.level,
+                rank = rank,
+                avatar = student.avatar
             )
         }
-        LazyColumn(
-            modifier = Modifier.padding(10.dp),
-        ) {
-            items(uiState.students) { item ->
-                val rank = uiState.students.indexOf(item) + 1
-                StudentItem(
-                    name = item.fullName,
-                    level = item.level,
-                    rank = rank,
-                    avatar = item.avatar
-                )
-            }
+
+        item { SectionHeader(icon = R.drawable.book, title = "Konu Anlatımı") }
+
+        items(uiState.subjects) { subject ->
+            SubjectItem(
+                name = subject,
+                onClick = {
+                    onNavigateToSubjectExplanation(subject)
+                }
+            )
         }
+    }
+}
+
+@Composable
+fun SectionHeader(
+    @DrawableRes icon: Int,
+    title: String
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(15.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
+    ) {
+        Image(
+            painter = painterResource(id = icon),
+            contentDescription = "$title İkonu",
+            modifier = Modifier.size(40.dp)
+        )
+        Text(
+            modifier = Modifier.padding(start = 15.dp),
+            text = title,
+            style = TextStyle(
+                fontSize = 23.sp,
+                fontWeight = FontWeight.SemiBold,
+            )
+        )
     }
 }
 

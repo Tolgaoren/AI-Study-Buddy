@@ -3,6 +3,7 @@ package com.toren.hackathon24educationproject.presentation.sign_in
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.toren.hackathon24educationproject.domain.model.Classroom
 import com.toren.hackathon24educationproject.domain.model.Resource
 import com.toren.hackathon24educationproject.domain.model.Student
 import com.toren.hackathon24educationproject.domain.repository.AuthRepository
@@ -22,7 +23,8 @@ import javax.inject.Inject
 class SignInViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val firestoreRepository: FirestoreRepository,
-    private val student: Student
+    private val student: Student,
+    private var classroom: Classroom
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(SignInContract.UiState())
@@ -43,6 +45,7 @@ class SignInViewModel @Inject constructor(
             is SignInContract.UiEvent.OnSignInClick -> signIn()
             is SignInContract.UiEvent.OnSignUpClick -> signUp()
             is SignInContract.UiEvent.OnCreateClassroomClick -> createClassroom()
+            is SignInContract.UiEvent.OnLastItemVisibilityChange -> updateUiState { copy(lastItemVisibility = !lastItemVisibility) }
         }
     }
 
@@ -52,26 +55,6 @@ class SignInViewModel @Inject constructor(
         } else {
             updateUiState { copy(isLoading = false) }
         }
-    }
-    private fun getUserInfo() = viewModelScope.launch {
-        when(val result = firestoreRepository.getStudent()) {
-            is Resource.Loading -> updateUiState { copy(isLoading = true) }
-
-            is Resource.Success -> {
-                student.id = result.data?.id ?: authRepository.getUserUid()
-                student.fullName = result.data?.fullName ?: ""
-                student.classroomId = result.data?.classroomId ?: ""
-                student.level = result.data?.level ?: 0
-                student.avatar = result.data?.avatar ?: 1
-                println("sign in: "+student)
-                emitUiEffect(SignInContract.UiEffect.NavigateToClassroom)
-        }
-            is Resource.Error -> {
-                Log.d("TAG", "getUserInfo: ${result.message}")
-                updateUiState { copy(isLoading = false) }
-            }
-        }
-
     }
 
     private fun signIn() = viewModelScope.launch {
@@ -89,6 +72,47 @@ class SignInViewModel @Inject constructor(
             }
         }
     }
+    private fun getUserInfo() = viewModelScope.launch {
+        when(val result = firestoreRepository.getStudent()) {
+            is Resource.Loading -> updateUiState { copy(isLoading = true) }
+
+            is Resource.Success -> {
+                student.id = result.data?.id ?: authRepository.getUserUid()
+                student.fullName = result.data?.fullName ?: ""
+                student.classroomId = result.data?.classroomId ?: ""
+                student.level = result.data?.level ?: 0
+                student.avatar = result.data?.avatar ?: 1
+                student.badges = result.data?.badges ?: listOf()
+                classroom.id = result.data?.classroomId ?: ""
+                getClassroom()
+        }
+            is Resource.Error -> {
+                Log.d("TAG", "getUserInfo: ${result.message}")
+                updateUiState { copy(isLoading = false) }
+            }
+        }
+
+    }
+
+    private fun getClassroom() = viewModelScope.launch {
+        when (val result = firestoreRepository.getClassroom()) {
+            is Resource.Loading -> updateUiState { copy(isLoading = true) }
+            is Resource.Success -> {
+                classroom.id = result.data?.id ?: ""
+                classroom.name = result.data?.name ?: ""
+                classroom.subjects = result.data?.subjects ?: listOf()
+                classroom.grade = result.data?.grade ?: 1
+
+                emitUiEffect(SignInContract.UiEffect.NavigateToClassroom)
+            }
+
+            is Resource.Error -> {
+                Log.d("TAG", "getClassroom: ${result.message}")
+                updateUiState { copy(isLoading = false) }
+            }
+        }
+    }
+
 
     private fun signUp() = viewModelScope.launch {
         emitUiEffect(SignInContract.UiEffect.NavigateToSignUp)

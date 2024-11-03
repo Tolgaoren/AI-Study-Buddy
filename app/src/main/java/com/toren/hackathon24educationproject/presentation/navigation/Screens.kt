@@ -28,4 +28,9 @@ sealed class Screens(
         route = "sign_up",
         title = "Sign Up",
     )
+    object SubjectExplanation : Screens(
+        route = "subject_explanation",
+        title = "Subject Explanation",
+    )
+
 }

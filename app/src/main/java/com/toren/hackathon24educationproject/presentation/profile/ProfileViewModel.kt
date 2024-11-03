@@ -2,7 +2,9 @@ package com.toren.hackathon24educationproject.presentation.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.toren.hackathon24educationproject.domain.model.Resource
 import com.toren.hackathon24educationproject.domain.model.Student
+import com.toren.hackathon24educationproject.domain.repository.AuthRepository
 import com.toren.hackathon24educationproject.domain.repository.FirestoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -18,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val student: Student,
-    private val firebaseRepository: FirestoreRepository
+    private val authRepository: AuthRepository
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileContract.UiState())
@@ -34,6 +36,7 @@ class ProfileViewModel @Inject constructor(
     fun onEvent(event: ProfileContract.UiEvent) {
         when (event) {
             is ProfileContract.UiEvent.Refresh -> refresh()
+            is ProfileContract.UiEvent.SignOutClick -> signOut()
             else -> {}
         }
     }
@@ -44,7 +47,8 @@ class ProfileViewModel @Inject constructor(
                 fullName = student.fullName,
                 avatar = student.avatar,
                 level = student.level / 100,
-                progress = student.level % 100 / 100f
+                progress = student.level % 100 / 100f,
+                badges = student.badges
             )
         }
 
@@ -52,6 +56,19 @@ class ProfileViewModel @Inject constructor(
 
     private fun refresh() {
         getStudent()
+    }
+
+    private fun signOut() {
+        viewModelScope.launch {
+            when (val result =authRepository.signOut()) {
+                is Resource.Error -> emitUiEffect(ProfileContract.UiEffect.ShowToast(result.message ?: ""))
+                is Resource.Loading -> updateUiState { copy(isLoading = true) }
+                is Resource.Success -> {
+                    updateUiState { copy(isLoading = false) }
+                    emitUiEffect(ProfileContract.UiEffect.GoToLoginScreen)
+                }
+            }
+        }
     }
 
     private fun updateUiState(block: ProfileContract.UiState.() -> ProfileContract.UiState) {

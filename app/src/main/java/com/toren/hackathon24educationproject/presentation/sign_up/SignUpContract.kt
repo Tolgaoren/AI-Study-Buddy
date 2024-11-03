@@ -7,6 +7,7 @@ object SignUpContract {
         val password: String = "",
         val fullName: String = "",
         val classroomCode: String = "",
+        val lastItemVisibility: Boolean = false
     )
     sealed class UiEvent {
         data class OnEmailChange(val email: String) : UiEvent()
@@ -16,6 +17,7 @@ object SignUpContract {
         object OnSignInClick : UiEvent()
         object OnSignUpClick : UiEvent()
         object OnCreateClassroomClick : UiEvent()
+        object OnLastItemVisibilityChange : UiEvent()
     }
 
     sealed class UiEffect {

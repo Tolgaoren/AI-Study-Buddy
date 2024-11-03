@@ -9,12 +9,16 @@ object ProfileContract {
         val avatar: Int = 0,
         val level: Int = 0,
         val progress: Float = 0f,
+        val badges: List<Int> = emptyList()
     )
     sealed class UiEvent {
         object Refresh : UiEvent()
+        object SignOutClick : UiEvent()
+        data class ShowToast(val message: String) : UiEvent()
     }
     sealed class UiEffect {
         data class ShowToast(val message: String) : UiEffect()
+        object GoToLoginScreen : UiEffect()
     }
 
 }

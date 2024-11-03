@@ -1,6 +1,7 @@
 package com.toren.hackathon24educationproject.presentation.sign_in
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,8 +9,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,13 +29,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
+import com.toren.hackathon24educationproject.R
+import com.toren.hackathon24educationproject.presentation.theme.AppNameColor
+import com.toren.hackathon24educationproject.presentation.theme.Purple80
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -37,7 +55,7 @@ fun SignInScreen(
     uiEvent: (SignInContract.UiEvent) -> Unit,
     onNavigateToSignUp: () -> Unit,
     onNavigateToClassroom: () -> Unit,
-    onNavigateToCreateClassroom: () -> Unit
+    onNavigateToCreateClassroom: () -> Unit,
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -68,34 +86,44 @@ fun SignInScreen(
 
     Surface {
         Column {
-            Box (
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxSize(),
-            ){
-
-            }
-            Box (
+            Box(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxSize(),
                 contentAlignment = Alignment.Center
-            ){
+            ) {
+
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = "Logo",
+                    modifier = Modifier.size(200.dp),
+                    alignment = Alignment.Center
+                )
+
+            }
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
                 EmailPasswordForm(
                     modifier = Modifier.padding(8.dp),
                     email = uiState.email,
                     password = uiState.password,
                     isLoading = uiState.isLoading,
                     firstFieldLabel = "Email",
-                    secondFieldLabel = "Password",
+                    secondFieldLabel = "Parola",
                     onEmailChange = { uiEvent(SignInContract.UiEvent.OnEmailChange(it)) },
                     onPasswordChange = { uiEvent(SignInContract.UiEvent.OnPasswordChange(it)) },
-                    primaryButtonText = "Sign In",
-                    secondaryButtonText = "Sign Up",
-                    tertiaryButtonText = "Create Classroom",
+                    primaryButtonText = "Giriş yap",
+                    secondaryButtonText = "Hesap oluştur",
+                    tertiaryButtonText = "Sınıf oluştur",
                     onPrimaryButtonClick = { uiEvent(SignInContract.UiEvent.OnSignInClick) },
                     onSecondaryButtonClick = { uiEvent(SignInContract.UiEvent.OnSignUpClick) },
                     onTertiaryButtonClick = { uiEvent(SignInContract.UiEvent.OnCreateClassroomClick) },
+                    lastItemVisibility = uiState.lastItemVisibility,
+                    lastItemVisibilityButtonClick = { uiEvent(SignInContract.UiEvent.OnLastItemVisibilityChange) }
                 )
             }
 
@@ -119,18 +147,21 @@ fun EmailPasswordForm(
     tertiaryButtonText: String,
     onPrimaryButtonClick: () -> Unit,
     onSecondaryButtonClick: () -> Unit,
-    onTertiaryButtonClick: () -> Unit
+    onTertiaryButtonClick: () -> Unit,
+    lastItemVisibility: Boolean = false,
+    lastItemVisibilityButtonClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         OutlinedTextField(
             value = email,
             onValueChange = onEmailChange,
             label = {
-                Text( firstFieldLabel )
-                    },
+                Text(firstFieldLabel)
+            },
             singleLine = true,
             enabled = !isLoading,
             modifier = Modifier
@@ -143,10 +174,25 @@ fun EmailPasswordForm(
             value = password,
             onValueChange = onPasswordChange,
             label = {
-                Text( secondFieldLabel )
-                    },
+                Text(secondFieldLabel)
+            },
             singleLine = true,
             enabled = !isLoading,
+            visualTransformation = if (lastItemVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+            trailingIcon = {
+                val image = if (lastItemVisibility)
+                    Icons.Filled.Visibility
+                else Icons.Filled.VisibilityOff
+
+                IconButton(onClick = {
+                    lastItemVisibilityButtonClick()
+                }) {
+                    Icon(
+                        imageVector = image,
+                        contentDescription = if (lastItemVisibility) "Hide password" else "Show password"
+                    )
+                }
+            },
             modifier = Modifier
                 .alpha(if (isLoading) 0.8f else 1f)
         )
@@ -166,10 +212,10 @@ fun EmailPasswordForm(
 
             Spacer(modifier = modifier)
 
-            Row (
+            Row(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 horizontalArrangement = Arrangement.SpaceEvenly
-            ){
+            ) {
                 TextButton(onClick = onSecondaryButtonClick) {
                     Text(secondaryButtonText)
                 }

@@ -38,9 +38,11 @@ class CreateClassroomViewModel @Inject constructor(
             is CreateClassroomContract.UiEvent.OnTeacherNameChange -> updateUiState { copy(teacherName = event.name) }
             is CreateClassroomContract.UiEvent.OnEmailChange -> updateUiState { copy(email = event.email) }
             is CreateClassroomContract.UiEvent.OnPasswordChange -> updateUiState { copy(password = event.password) }
+            is CreateClassroomContract.UiEvent.OnGradeChange -> updateUiState { copy(grade = event.grade) }
             is CreateClassroomContract.UiEvent.OnCreateClassroomClick -> createClassroom()
             is CreateClassroomContract.UiEvent.OnSignInClick -> signIn()
             is CreateClassroomContract.UiEvent.OnSignUpClick -> signUp()
+            is CreateClassroomContract.UiEvent.OnLastItemVisibilityChange -> updateUiState { copy(lastItemVisibility = !lastItemVisibility) }
         }
     }
 
@@ -49,7 +51,7 @@ class CreateClassroomViewModel @Inject constructor(
         updateUiState { copy(isLoading = true) }
         classroom.id = "c" + System.currentTimeMillis().toString()
         classroom.name = uiState.value.classroomName
-        //classroom.grade = uiState.value.grade
+        classroom.grade = uiState.value.grade
         when (val result = firestoreRepository.createClassroom()) {
             is Resource.Loading -> updateUiState { copy(isLoading = true) }
             is Resource.Success -> {

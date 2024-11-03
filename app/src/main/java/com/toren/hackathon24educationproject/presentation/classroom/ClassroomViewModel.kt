@@ -31,13 +31,14 @@ class ClassroomViewModel @Inject constructor(
     val uiEffect: Flow<ClassroomContract.UiEffect> by lazy { _uiEffect.receiveAsFlow() }
 
     init {
+        val subjects = classroom.subjects
+        updateUiState { copy(subjects = subjects) }
         getStudents()
     }
 
     fun onEvent(event: ClassroomContract.UiEvent) {
         when (event) {
-
-            else -> {}
+            is ClassroomContract.UiEvent.OnSubjectClick -> onSubjectClick(event.subject)
         }
     }
 
@@ -47,7 +48,7 @@ class ClassroomViewModel @Inject constructor(
             is Resource.Error -> updateUiState {
                 copy(
                     error = result.message,
-                    isLoading = false
+                    isLoading = false,
                 )
             }
 
@@ -65,6 +66,10 @@ class ClassroomViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private fun onSubjectClick(subject: String) = viewModelScope.launch {
+        emitUiEffect(ClassroomContract.UiEffect.NavigateToSubjectExplanation)
     }
 
     private fun updateUiState(block: ClassroomContract.UiState.() -> ClassroomContract.UiState) {

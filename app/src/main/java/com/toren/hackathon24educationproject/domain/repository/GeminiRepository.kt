@@ -6,4 +6,8 @@ interface GeminiRepository {
     suspend fun startChat(subject: String): Resource<String>
 
     suspend fun checkAnswer(answer: String): Resource<String>
+
+    suspend fun getExplanation(subject: String): Resource<String>
+
+    suspend fun reply(prompt: String): Resource<String>
 }

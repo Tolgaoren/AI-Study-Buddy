@@ -9,14 +9,16 @@ object ClassroomContract {
         val classroom: Classroom = Classroom(),
         val error: String? = null,
         val students: List<Student> = emptyList(),
-        val url: String = ""
+        val url: String = "",
+        val subjects: List<String> = emptyList(),
         )
     sealed class UiEvent {
-
+        data class OnSubjectClick(val subject: String) : UiEvent()
     }
 
     sealed class UiEffect {
         data class ShowToast(val message: String) : UiEffect()
+        object NavigateToSubjectExplanation : UiEffect()
     }
 
 }

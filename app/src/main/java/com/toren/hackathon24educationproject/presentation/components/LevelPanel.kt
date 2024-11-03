@@ -1,4 +1,4 @@
-package com.toren.hackathon24educationproject.presentation.level_panel
+package com.toren.hackathon24educationproject.presentation.components
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
@@ -110,7 +110,7 @@ fun LevelPanel(
                 style = TextStyle(
                     fontSize = 17.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = TextBlack
+                    color = if (isSystemInDarkTheme()) Color.White else TextBlack
                 )
             )
         }

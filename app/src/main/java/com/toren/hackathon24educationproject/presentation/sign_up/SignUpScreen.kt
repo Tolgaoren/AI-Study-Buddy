@@ -1,11 +1,13 @@
 package com.toren.hackathon24educationproject.presentation.sign_up
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -15,10 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
+import com.toren.hackathon24educationproject.R
 import com.toren.hackathon24educationproject.presentation.sign_in.EmailPasswordForm
 import kotlinx.coroutines.flow.Flow
 
@@ -55,7 +59,15 @@ fun SignUpScreen(
                 modifier = Modifier
                     .weight(0.5f)
                     .fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
+
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = "Logo",
+                    modifier = Modifier.size(200.dp),
+                    alignment = Alignment.Center
+                )
 
             }
             Box(
@@ -71,20 +83,22 @@ fun SignUpScreen(
                     thirdField = uiState.email,
                     fourthField = uiState.password,
                     isLoading = uiState.isLoading,
-                    firstFieldLabel = "Classroom Code",
-                    secondFieldLabel = "Full Name",
+                    firstFieldLabel = "Sınıf kodu",
+                    secondFieldLabel = "Ad Soyad",
                     thirdFieldLabel = "Email",
-                    fourthFieldLabel = "Password",
+                    fourthFieldLabel = "Parola",
                     onFirstFieldChange = { uiEvent(SignUpContract.UiEvent.OnClassroomCodeChange(it)) },
                     onSecondFieldChange = { uiEvent(SignUpContract.UiEvent.OnFullNameChange(it)) },
                     onThirdFieldChange = { uiEvent(SignUpContract.UiEvent.OnEmailChange(it)) },
                     onFourthFieldChange = { uiEvent(SignUpContract.UiEvent.OnPasswordChange(it)) },
-                    primaryButtonText = "Sign Up",
-                    secondaryButtonText = "Sign In",
-                    tertiaryButtonText = "Create Classroom",
+                    primaryButtonText = "Kayıt ol",
+                    secondaryButtonText = "Giriş Yap",
+                    tertiaryButtonText = "Sınıf oluştur",
                     onPrimaryButtonClick = { uiEvent(SignUpContract.UiEvent.OnSignUpClick) },
                     onSecondaryButtonClick = { uiEvent(SignUpContract.UiEvent.OnSignInClick) },
-                    onTertiaryButtonClick = { uiEvent(SignUpContract.UiEvent.OnCreateClassroomClick) }
+                    onTertiaryButtonClick = { uiEvent(SignUpContract.UiEvent.OnCreateClassroomClick) },
+                    lastItemVisibility = uiState.lastItemVisibility,
+                    lastItemVisibilityButtonClick = { uiEvent(SignUpContract.UiEvent.OnLastItemVisibilityChange) }
                 )
             }
         }
@@ -113,6 +127,8 @@ fun SignUpForm(
     onPrimaryButtonClick: () -> Unit,
     onSecondaryButtonClick: () -> Unit,
     onTertiaryButtonClick: () -> Unit,
+    lastItemVisibility: Boolean,
+    lastItemVisibilityButtonClick: () -> Unit
 ) {
 
     Column(
@@ -161,7 +177,9 @@ fun SignUpForm(
             tertiaryButtonText = tertiaryButtonText,
             onPrimaryButtonClick = onPrimaryButtonClick,
             onSecondaryButtonClick = onSecondaryButtonClick,
-            onTertiaryButtonClick = onTertiaryButtonClick
+            onTertiaryButtonClick = onTertiaryButtonClick,
+            lastItemVisibility = lastItemVisibility,
+            lastItemVisibilityButtonClick = lastItemVisibilityButtonClick
         )
     }
 }

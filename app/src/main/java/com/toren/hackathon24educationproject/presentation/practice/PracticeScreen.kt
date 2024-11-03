@@ -45,10 +45,12 @@ import app.rive.runtime.kotlin.RiveAnimationView
 import app.rive.runtime.kotlin.core.ExperimentalAssetLoader
 import com.toren.hackathon24educationproject.R
 import com.toren.hackathon24educationproject.common.Constants.STATE_MACHINE_NAME
-import com.toren.hackathon24educationproject.presentation.level_panel.LevelPanel
+import com.toren.hackathon24educationproject.presentation.components.LevelPanel
+import com.toren.hackathon24educationproject.presentation.components.LoadingAnimation
 import com.toren.hackathon24educationproject.presentation.theme.Purple200
 import com.toren.hackathon24educationproject.presentation.theme.Purple80
 import com.toren.hackathon24educationproject.presentation.theme.PurpleGrey80
+import com.toren.hackathon24educationproject.presentation.theme.TextBlack
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -134,16 +136,20 @@ fun PracticeScreen(
                     .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    modifier = Modifier
-                        .padding(8.dp),
-                    text = uiState.question,
-                    style = TextStyle(
-                        color = Color.Black,
-                        fontSize = 17.sp
-                    ),
-                    textAlign = TextAlign.Center
-                )
+                if (uiState.isLoading) {
+                    LoadingAnimation()
+                } else {
+                    Text(
+                        modifier = Modifier
+                            .padding(8.dp),
+                        text = uiState.question,
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontSize = 17.sp
+                        ),
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         }
         Row(
@@ -177,7 +183,7 @@ fun PracticeScreen(
             ) {
                 GradientButton(
                     text = "Sonraki",
-                    textColor = TextStyle.Default.color,
+                    textColor = TextBlack,
                     gradient = Brush.radialGradient(
                         listOf(
                             Purple80,
@@ -190,7 +196,7 @@ fun PracticeScreen(
                     )
                 GradientButton(
                     text = "Cevapla",
-                    textColor = TextStyle.Default.color,
+                    textColor = TextBlack,
                     gradient = Brush.radialGradient(
                         listOf(
                             Purple80,
@@ -219,6 +225,7 @@ fun PracticeScreen(
 
 @Composable
 fun GradientButton(
+    modifier: Modifier= Modifier,
     text: String,
     textColor: Color,
     gradient: Brush,

@@ -6,6 +6,6 @@ data class Classroom(
     var studentIds: List<String> = listOf(),
     var teacherIds: List<String> = listOf(),
     var subjects: List<String> = listOf(),
-    var grade: Grade = Grade.GRADE_1
+    var grade: Int = 1
 )
 

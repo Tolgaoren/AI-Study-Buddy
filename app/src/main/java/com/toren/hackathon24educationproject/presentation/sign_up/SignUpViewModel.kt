@@ -3,6 +3,7 @@ package com.toren.hackathon24educationproject.presentation.sign_up
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.toren.hackathon24educationproject.domain.model.Classroom
 import com.toren.hackathon24educationproject.domain.model.Resource
 import com.toren.hackathon24educationproject.domain.model.Student
 import com.toren.hackathon24educationproject.domain.repository.AuthRepository
@@ -23,6 +24,7 @@ class SignUpViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val firestoreRepository: FirestoreRepository,
     private var student: Student,
+    private var classroom: Classroom
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SignUpContract.UiState())
@@ -40,6 +42,7 @@ class SignUpViewModel @Inject constructor(
             is SignUpContract.UiEvent.OnSignInClick -> signIn()
             is SignUpContract.UiEvent.OnSignUpClick -> signUp()
             is SignUpContract.UiEvent.OnCreateClassroomClick -> createClassroom()
+            is SignUpContract.UiEvent.OnLastItemVisibilityChange -> updateUiState { copy(lastItemVisibility = !lastItemVisibility) }
         }
     }
 
@@ -74,13 +77,15 @@ class SignUpViewModel @Inject constructor(
         student.classroomId = uiState.value.classroomCode
         student.avatar = 1
 
+        classroom.id = uiState.value.classroomCode
+
         when (val result = firestoreRepository.saveStudent()) {
             is Resource.Loading -> {
                 updateUiState { copy(isLoading = true) }
             }
             is Resource.Success -> {
                 Log.d("Student", result.data.toString() )
-                emitUiEffect(SignUpContract.UiEffect.NavigateToClassroom)
+                getClassroom()
             }
             is Resource.Error -> {
                 Log.d("Student", result.message.toString())
@@ -88,6 +93,28 @@ class SignUpViewModel @Inject constructor(
             }
         }
     }
+
+    private fun getClassroom() = viewModelScope.launch {
+
+        when (val result = firestoreRepository.getClassroom()) {
+            is Resource.Loading -> {
+                updateUiState { copy(isLoading = true) }
+            }
+
+            is Resource.Success -> {
+                classroom.id = result.data?.id ?: ""
+                classroom.name = result.data?.name ?: ""
+                classroom.grade = result.data?.grade ?: 1
+                classroom.subjects = result.data?.subjects ?: listOf()
+                emitUiEffect(SignUpContract.UiEffect.NavigateToClassroom)
+            }
+            is Resource.Error -> {
+                Log.d("Classroom", result.message.toString())
+                updateUiState { copy(isLoading = false) }
+            }
+        }
+    }
+
 
     private fun updateUiState(block: SignUpContract.UiState.() -> SignUpContract.UiState) {
         _uiState.update(block)

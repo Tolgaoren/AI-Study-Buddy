@@ -1,7 +1,6 @@
 package com.toren.hackathon24educationproject.di
 
 import com.toren.hackathon24educationproject.domain.model.Classroom
-import com.toren.hackathon24educationproject.domain.model.Grade
 import com.toren.hackathon24educationproject.domain.model.History
 import com.toren.hackathon24educationproject.domain.model.Student
 import com.toren.hackathon24educationproject.domain.model.Teacher
@@ -36,7 +35,7 @@ object UserModule {
         studentIds = listOf(),
         teacherIds = listOf(),
         subjects = listOf("Çarpma", "Canlılar ve yaşam", "Problemler"),
-        grade = Grade.GRADE_1
+        grade = 1
     )
 
     @Provides
