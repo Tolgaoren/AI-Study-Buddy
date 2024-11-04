@@ -30,7 +30,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.toren.hackathon24educationproject.R
-import com.toren.hackathon24educationproject.presentation.sign_up.SignUpContract
 import com.toren.hackathon24educationproject.presentation.sign_up.SignUpForm
 import kotlinx.coroutines.flow.Flow
 
