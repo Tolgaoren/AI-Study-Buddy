@@ -18,7 +18,7 @@ object ClassroomContract {
 
     sealed class UiEffect {
         data class ShowToast(val message: String) : UiEffect()
-        object NavigateToSubjectExplanation : UiEffect()
+        data class NavigateToSubjectExplanation(val subject: String) : UiEffect()
     }
 
 }

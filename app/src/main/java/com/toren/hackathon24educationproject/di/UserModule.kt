@@ -34,7 +34,7 @@ object UserModule {
         name = "",
         studentIds = listOf(),
         teacherIds = listOf(),
-        subjects = listOf("Çarpma", "Canlılar ve yaşam", "Problemler"),
+        subjects = listOf(),
         grade = 1
     )
 

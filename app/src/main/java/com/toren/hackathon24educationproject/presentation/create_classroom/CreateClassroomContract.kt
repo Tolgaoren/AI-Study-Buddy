@@ -16,16 +16,16 @@ object CreateClassroomContract {
         data class OnEmailChange(val email: String) : UiEvent()
         data class OnPasswordChange(val password: String) : UiEvent()
         data class OnGradeChange(val grade: Int) : UiEvent()
-        object OnSignInClick : UiEvent()
-        object OnSignUpClick : UiEvent()
-        object OnCreateClassroomClick : UiEvent()
-        object OnLastItemVisibilityChange : UiEvent()
+        data object OnSignInClick : UiEvent()
+        data object OnSignUpClick : UiEvent()
+        data object OnCreateClassroomClick : UiEvent()
+        data object OnLastItemVisibilityChange : UiEvent()
 
     }
     sealed class UiEffect {
         data class ShowToast(val message: String) : UiEffect()
-        object NavigateToClassroom : UiEffect()
-        object NavigateToSignIn : UiEffect()
-        object NavigateToSignUp : UiEffect()
+        data object NavigateToClassroom : UiEffect()
+        data object NavigateToSignIn : UiEffect()
+        data object NavigateToSignUp : UiEffect()
     }
 }

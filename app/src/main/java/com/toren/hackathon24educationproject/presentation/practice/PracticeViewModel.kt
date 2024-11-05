@@ -22,7 +22,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PracticeViewModel @Inject constructor(
-    private val authRepository: AuthRepository,
     private val geminiRepository: GeminiRepository,
     private var student: Student,
     private val firestoreRepository: FirestoreRepository

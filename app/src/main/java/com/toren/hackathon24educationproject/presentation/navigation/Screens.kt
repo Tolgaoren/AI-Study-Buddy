@@ -4,31 +4,26 @@ sealed class Screens(
     val route: String,
     val title: String,
 ) {
-    object CreateClassroom : Screens(
+    data object CreateClassroom : Screens(
         route = "create_classroom",
         title = "Create Classroom",
     )
 
-    object Profile : Screens(
-        route = "profile",
-        title = "Profile",
-    )
-
-    object Practice : Screens(
+    data object Practice : Screens(
         route = "practice/{subject}",
         title = "practice"
     )
 
-    object SignIn : Screens(
+    data object SignIn : Screens(
         route = "sign_in",
         title = "Sign In",
     )
 
-    object SignUp : Screens(
+    data object SignUp : Screens(
         route = "sign_up",
         title = "Sign Up",
     )
-    object SubjectExplanation : Screens(
+    data object SubjectExplanation : Screens(
         route = "subject_explanation",
         title = "Subject Explanation",
     )

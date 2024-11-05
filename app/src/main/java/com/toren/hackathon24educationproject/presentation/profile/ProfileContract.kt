@@ -12,13 +12,13 @@ object ProfileContract {
         val badges: List<Int> = emptyList()
     )
     sealed class UiEvent {
-        object Refresh : UiEvent()
-        object SignOutClick : UiEvent()
+        data object Refresh : UiEvent()
+        data object SignOutClick : UiEvent()
         data class ShowToast(val message: String) : UiEvent()
     }
     sealed class UiEffect {
         data class ShowToast(val message: String) : UiEffect()
-        object GoToLoginScreen : UiEffect()
+        data object GoToLoginScreen : UiEffect()
     }
 
 }

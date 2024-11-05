@@ -30,7 +30,6 @@ import com.toren.hackathon24educationproject.presentation.subject_explanation.Su
 
 @Composable
 fun Navigation(
-    modifier: Modifier = Modifier,
     navController: NavHostController
 ) {
     NavHost(

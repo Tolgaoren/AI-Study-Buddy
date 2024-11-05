@@ -18,7 +18,6 @@ object SubjectExplanationContract {
     }
 
     sealed class UiEffect {
-        data object GoToBackScreen : UiEffect()
         data class ShowToast(val message: String) : UiEffect()
     }
 }

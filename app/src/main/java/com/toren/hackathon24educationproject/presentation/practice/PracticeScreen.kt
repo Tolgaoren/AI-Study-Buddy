@@ -99,11 +99,9 @@ fun PracticeScreen(
             uiEffect.collect { effect ->
                 when (effect) {
                     is PracticeContract.UiEffect.GoToBackScreen -> {}
-                    is PracticeContract.UiEffect.ShowToast -> Toast.makeText(
-                        context,
-                        effect.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    is PracticeContract.UiEffect.ShowToast -> {
+                        Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }

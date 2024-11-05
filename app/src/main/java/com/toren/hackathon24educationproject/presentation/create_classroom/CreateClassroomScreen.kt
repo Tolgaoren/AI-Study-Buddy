@@ -104,7 +104,8 @@ fun CreateClassroomScreen(
                                         uiEvent(CreateClassroomContract.UiEvent.OnGradeChange(grade))
                                         expanded = false
                                     },
-                                    enabled = if (uiState.isLoading) false else true)
+                                    enabled = !uiState.isLoading
+                                )
                             }
                         }
                     }

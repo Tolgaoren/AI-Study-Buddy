@@ -2,9 +2,7 @@ package com.toren.hackathon24educationproject.presentation.subject_explanation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.toren.hackathon24educationproject.domain.model.History
 import com.toren.hackathon24educationproject.domain.model.Resource
-import com.toren.hackathon24educationproject.domain.model.Student
 import com.toren.hackathon24educationproject.domain.repository.GeminiRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -19,9 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SubjectExplanationViewModel @Inject constructor(
-    private val geminiRepository: GeminiRepository,
-    private var student: Student,
-    private var history: History
+    private val geminiRepository: GeminiRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SubjectExplanationContract.UiState())

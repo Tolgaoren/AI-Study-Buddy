@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.toren.hackathon24educationproject.domain.model.Resource
 import com.toren.hackathon24educationproject.domain.model.Student
 import com.toren.hackathon24educationproject.domain.repository.AuthRepository
-import com.toren.hackathon24educationproject.domain.repository.FirestoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

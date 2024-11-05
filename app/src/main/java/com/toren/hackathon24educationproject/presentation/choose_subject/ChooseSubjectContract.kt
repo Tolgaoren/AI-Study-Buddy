@@ -12,12 +12,12 @@ object ChooseSubjectContract {
 
     sealed class UiEvent {
         data class OnSubjectClick(val subject: String) : UiEvent()
-        object Refresh : UiEvent()
+        data object Refresh : UiEvent()
     }
 
     sealed class UiEffect {
         data class ShowToast(val message: String) : UiEffect()
-        object NavigateToPractice : UiEffect()
+        data class NavigateToPractice(val subject: String) : UiEffect()
     }
 
 }

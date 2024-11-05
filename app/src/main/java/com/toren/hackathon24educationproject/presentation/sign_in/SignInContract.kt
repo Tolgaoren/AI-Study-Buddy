@@ -10,17 +10,17 @@ object SignInContract {
     sealed class UiEvent {
         data class OnEmailChange(val email: String) : UiEvent()
         data class OnPasswordChange(val password: String) : UiEvent()
-        object OnSignInClick : UiEvent()
-        object OnSignUpClick : UiEvent()
-        object OnCreateClassroomClick : UiEvent()
-        object OnLastItemVisibilityChange : UiEvent()
+        data object OnSignInClick : UiEvent()
+        data object OnSignUpClick : UiEvent()
+        data object OnCreateClassroomClick : UiEvent()
+        data object OnLastItemVisibilityChange : UiEvent()
     }
 
     sealed class UiEffect {
         data class ShowToast(val message: String) : UiEffect()
-        object NavigateToClassroom : UiEffect()
-        object NavigateToSignUp : UiEffect()
-        object NavigateToCreateClassroom : UiEffect()
+        data object NavigateToClassroom : UiEffect()
+        data object NavigateToSignUp : UiEffect()
+        data object NavigateToCreateClassroom : UiEffect()
     }
 
 }

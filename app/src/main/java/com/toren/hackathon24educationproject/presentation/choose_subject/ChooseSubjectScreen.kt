@@ -1,5 +1,6 @@
 package com.toren.hackathon24educationproject.presentation.choose_subject
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,11 +22,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import com.toren.hackathon24educationproject.R
 import com.toren.hackathon24educationproject.presentation.components.LevelPanel
 import com.toren.hackathon24educationproject.presentation.theme.Purple200
@@ -40,7 +45,23 @@ fun ChooseSubjectScreen(
     uiEvent: (ChooseSubjectContract.UiEvent) -> Unit,
     onNavigateToPractice: (Any?) -> Unit,
 ) {
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
+    LaunchedEffect(uiEffect, lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            uiEffect.collect { effect ->
+                when (effect) {
+                    is ChooseSubjectContract.UiEffect.NavigateToPractice -> {
+                        onNavigateToPractice(effect.subject)
+                    }
+                    is ChooseSubjectContract.UiEffect.ShowToast -> {
+                        Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
     LaunchedEffect(Unit) {
         uiEvent(ChooseSubjectContract.UiEvent.Refresh)
     }
@@ -84,7 +105,9 @@ fun ChooseSubjectScreen(
             items(uiState.subjects) { item ->
                 SubjectItem(
                     name = item,
-                    onClick = { onNavigateToPractice(item) }
+                    onClick = {
+                        uiEvent(ChooseSubjectContract.UiEvent.OnSubjectClick(item))
+                    }
                 )
             }
         }

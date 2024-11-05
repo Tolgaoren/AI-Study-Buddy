@@ -34,7 +34,7 @@ class ChooseSubjectViewModel
 
     fun onEvent(event: ChooseSubjectContract.UiEvent) {
         when (event) {
-            is ChooseSubjectContract.UiEvent.OnSubjectClick -> onSubjectClick()
+            is ChooseSubjectContract.UiEvent.OnSubjectClick -> onSubjectClick(event.subject)
             is ChooseSubjectContract.UiEvent.Refresh -> refresh()
         }
     }
@@ -50,8 +50,8 @@ class ChooseSubjectViewModel
         }
     }
 
-    private fun onSubjectClick() = viewModelScope.launch {
-        emitUiEffect(ChooseSubjectContract.UiEffect.NavigateToPractice)
+    private fun onSubjectClick(subject: String) = viewModelScope.launch {
+        emitUiEffect(ChooseSubjectContract.UiEffect.NavigateToPractice(subject))
     }
 
     private fun updateUiState(block: ChooseSubjectContract.UiState.() -> ChooseSubjectContract.UiState) {
