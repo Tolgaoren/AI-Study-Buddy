@@ -4,10 +4,12 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -16,6 +18,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -23,6 +27,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.toren.hackathon24educationproject.R
+import com.toren.hackathon24educationproject.presentation.components.SelectAvatar
 import com.toren.hackathon24educationproject.presentation.sign_in.EmailPasswordForm
 import kotlinx.coroutines.flow.Flow
 
@@ -42,7 +47,11 @@ fun SignUpScreen(
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             uiEffect.collect { effect ->
                 when (effect) {
-                    is SignUpContract.UiEffect.ShowToast -> Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+                    is SignUpContract.UiEffect.ShowToast -> Toast.makeText(
+                        context,
+                        effect.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
 
                     is SignUpContract.UiEffect.NavigateToSignIn -> onNavigateToSignIn()
 
@@ -61,14 +70,10 @@ fun SignUpScreen(
                     .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-
-                Image(
-                    painter = painterResource(id = R.drawable.logo),
-                    contentDescription = "Logo",
-                    modifier = Modifier.size(200.dp),
-                    alignment = Alignment.Center
+                SelectAvatar(
+                    selectedAvatarIndex = uiState.avatarId,
+                    onAvatarSelected = { uiEvent(SignUpContract.UiEvent.OnAvatarChange(it)) }
                 )
-
             }
             Box(
                 modifier = Modifier
@@ -104,7 +109,6 @@ fun SignUpScreen(
         }
     }
 }
-
 @Composable
 fun SignUpForm(
     modifier: Modifier = Modifier,
@@ -128,7 +132,7 @@ fun SignUpForm(
     onSecondaryButtonClick: () -> Unit,
     onTertiaryButtonClick: () -> Unit,
     lastItemVisibility: Boolean,
-    lastItemVisibilityButtonClick: () -> Unit
+    lastItemVisibilityButtonClick: () -> Unit,
 ) {
 
     Column(
@@ -139,8 +143,8 @@ fun SignUpForm(
             value = firstField,
             onValueChange = onFirstFieldChange,
             label = {
-                Text( firstFieldLabel )
-                    },
+                Text(firstFieldLabel)
+            },
             singleLine = true,
             enabled = !isLoading,
             modifier = Modifier
@@ -153,8 +157,8 @@ fun SignUpForm(
             value = secondField,
             onValueChange = onSecondFieldChange,
             label = {
-                Text( secondFieldLabel )
-                    },
+                Text(secondFieldLabel)
+            },
             singleLine = true,
             enabled = !isLoading,
             modifier = Modifier

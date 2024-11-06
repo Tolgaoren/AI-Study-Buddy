@@ -7,13 +7,15 @@ object SignUpContract {
         val password: String = "",
         val fullName: String = "",
         val classroomCode: String = "",
-        val lastItemVisibility: Boolean = false
+        val lastItemVisibility: Boolean = false,
+        val avatarId: Int = 1,
     )
     sealed class UiEvent {
         data class OnEmailChange(val email: String) : UiEvent()
         data class OnPasswordChange(val password: String) : UiEvent()
         data class OnFullNameChange(val name: String) : UiEvent()
         data class OnClassroomCodeChange(val code: String) : UiEvent()
+        data class OnAvatarChange(val avatarId: Int) : UiEvent()
         data object OnSignInClick : UiEvent()
         data object OnSignUpClick : UiEvent()
         data object OnCreateClassroomClick : UiEvent()

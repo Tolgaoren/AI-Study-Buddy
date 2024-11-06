@@ -43,6 +43,10 @@ class SignUpViewModel @Inject constructor(
             is SignUpContract.UiEvent.OnSignUpClick -> signUp()
             is SignUpContract.UiEvent.OnCreateClassroomClick -> createClassroom()
             is SignUpContract.UiEvent.OnLastItemVisibilityChange -> updateUiState { copy(lastItemVisibility = !lastItemVisibility) }
+            is SignUpContract.UiEvent.OnAvatarChange -> {
+                updateUiState { copy(avatarId = event.avatarId) }
+                Log.d("Avatar", uiState.value.avatarId.toString())
+            }
         }
     }
 
@@ -75,7 +79,7 @@ class SignUpViewModel @Inject constructor(
         student.id = authRepository.getUserUid()
         student.fullName = uiState.value.fullName
         student.classroomId = uiState.value.classroomCode
-        student.avatar = 1
+        student.avatar = uiState.value.avatarId
 
         classroom.id = uiState.value.classroomCode
 
