@@ -84,7 +84,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation (libs.androidx.material.icons.extended)
-    //implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6") // En son versiyonu kontrol edin
 
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
