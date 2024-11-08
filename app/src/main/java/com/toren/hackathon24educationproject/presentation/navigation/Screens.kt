@@ -8,17 +8,14 @@ sealed class Screens(
         route = "create_classroom",
         title = "Create Classroom",
     )
-
     data object Practice : Screens(
         route = "practice/{subject}",
         title = "practice"
     )
-
     data object SignIn : Screens(
         route = "sign_in",
         title = "Sign In",
     )
-
     data object SignUp : Screens(
         route = "sign_up",
         title = "Sign Up",
@@ -27,5 +24,8 @@ sealed class Screens(
         route = "subject_explanation",
         title = "Subject Explanation",
     )
-
+    data object Teacher : Screens(
+        route = "teacher",
+        title = "Teacher",
+    )
 }

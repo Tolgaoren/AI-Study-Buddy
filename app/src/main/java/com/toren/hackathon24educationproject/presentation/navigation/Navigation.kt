@@ -27,6 +27,8 @@ import com.toren.hackathon24educationproject.presentation.sign_up.SignUpScreen
 import com.toren.hackathon24educationproject.presentation.sign_up.SignUpViewModel
 import com.toren.hackathon24educationproject.presentation.subject_explanation.SubjectExplanationScreen
 import com.toren.hackathon24educationproject.presentation.subject_explanation.SubjectExplanationViewModel
+import com.toren.hackathon24educationproject.presentation.teacher.TeacherScreen
+import com.toren.hackathon24educationproject.presentation.teacher.TeacherViewModel
 
 @Composable
 fun Navigation(
@@ -128,6 +130,9 @@ fun Navigation(
                 },
                 onNavigateToCreateClassroom = {
                     navController.navigate(Screens.CreateClassroom.route)
+                },
+                onNavigateToTeacher = {
+                    navController.navigate(Screens.Teacher.route)
                 }
             )
         }
@@ -170,7 +175,7 @@ fun Navigation(
         composable(route = Screens.SubjectExplanation.route + "/{subject}",
             arguments = listOf(navArgument("subject") {
                 type = NavType.StringType
-            })) {navBackStackEntry ->
+            })) { navBackStackEntry ->
             val viewModel: SubjectExplanationViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
             val uiEffect = viewModel.uiEffect
@@ -183,7 +188,16 @@ fun Navigation(
                 uiEffect = uiEffect,
                 uiEvent = viewModel::onEvent
             )
-
+        }
+        composable(route = Screens.Teacher.route) {
+            val viewModel: TeacherViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val uiEffect = viewModel.uiEffect
+            TeacherScreen(
+                uiState = uiState,
+                uiEffect = uiEffect,
+                uiEvent = viewModel::onEvent
+            )
         }
     }
 }

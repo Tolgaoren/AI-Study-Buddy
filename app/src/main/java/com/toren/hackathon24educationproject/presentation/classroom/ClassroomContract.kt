@@ -11,7 +11,8 @@ object ClassroomContract {
         val students: List<Student> = emptyList(),
         val url: String = "",
         val subjects: List<String> = emptyList(),
-        )
+    )
+
     sealed class UiEvent {
         data class OnSubjectClick(val subject: String) : UiEvent()
     }
