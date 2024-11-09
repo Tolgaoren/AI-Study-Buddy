@@ -16,8 +16,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -35,6 +41,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.toren.hackathon24educationproject.R
+import com.toren.hackathon24educationproject.domain.model.Student
 import com.toren.hackathon24educationproject.presentation.choose_subject.SubjectItem
 import com.toren.hackathon24educationproject.presentation.components.LevelCircle
 import com.toren.hackathon24educationproject.presentation.theme.BLue200
@@ -67,6 +74,23 @@ fun ClassroomScreen(
             }
         }
     }
+    ClassroomContent(
+        students = uiState.students,
+        subjects = uiState.subjects,
+        onSubjectClick = {
+            uiEvent(ClassroomContract.UiEvent.OnSubjectClick(it))
+        },
+        subjectTitle = "Konu Anlatımı"
+    )
+}
+
+@Composable
+fun ClassroomContent(
+    students: List<Student>,
+    subjects: List<String>,
+    onSubjectClick: (String) -> Unit,
+    subjectTitle: String
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -74,8 +98,8 @@ fun ClassroomScreen(
     ) {
         item { SectionHeader(icon = R.drawable.ranking_icon, title = "En yüksek seviyeler") }
 
-        items(uiState.students) { student ->
-            val rank = uiState.students.indexOf(student) + 1
+        items(students) { student ->
+            val rank = students.indexOf(student) + 1
             StudentItem(
                 name = student.fullName,
                 level = student.level,
@@ -84,13 +108,15 @@ fun ClassroomScreen(
             )
         }
 
-        item { SectionHeader(icon = R.drawable.book, title = "Konu Anlatımı") }
-
-        items(uiState.subjects) { subject ->
+        item {
+            SectionHeader(icon = R.drawable.book, title = subjectTitle)
+        }
+        
+        items(subjects) { subject ->
             SubjectItem(
                 name = subject,
                 onClick = {
-                    uiEvent(ClassroomContract.UiEvent.OnSubjectClick(subject))
+                    onSubjectClick(subject)
                 }
             )
         }

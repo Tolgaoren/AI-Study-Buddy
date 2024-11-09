@@ -31,7 +31,6 @@ fun SignUpScreen(
     onNavigateToSignIn: () -> Unit,
     onNavigateToClassroom: () -> Unit,
     onNavigateToCreateClassroom: () -> Unit,
-    onNavigateToTeacher: () -> Unit
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -51,8 +50,6 @@ fun SignUpScreen(
                     is SignUpContract.UiEffect.NavigateToClassroom -> onNavigateToClassroom()
 
                     is SignUpContract.UiEffect.NavigateToCreateClassroom -> onNavigateToCreateClassroom()
-
-                    is SignUpContract.UiEffect.NavigateToTeacher -> onNavigateToTeacher()
                 }
             }
         }

@@ -110,7 +110,7 @@ class SignUpViewModel @Inject constructor(
                 classroom.name = result.data?.name ?: ""
                 classroom.grade = result.data?.grade ?: 1
                 classroom.subjects = result.data?.subjects ?: listOf()
-                emitUiEffect(SignUpContract.UiEffect.NavigateToTeacher)
+                emitUiEffect(SignUpContract.UiEffect.NavigateToClassroom)
             }
             is Resource.Error -> {
                 Log.d("Classroom", result.message.toString())

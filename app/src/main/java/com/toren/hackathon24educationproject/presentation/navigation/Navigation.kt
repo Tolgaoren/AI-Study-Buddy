@@ -130,9 +130,6 @@ fun Navigation(
                 },
                 onNavigateToCreateClassroom = {
                     navController.navigate(Screens.CreateClassroom.route)
-                },
-                onNavigateToTeacher = {
-                    navController.navigate(Screens.Teacher.route)
                 }
             )
         }
@@ -157,12 +154,8 @@ fun Navigation(
                 uiState = uiState,
                 uiEffect = uiEffect,
                 uiEvent = viewModel::onEvent,
-                onNavigateToClassroom = {
-                    navController.navigate(BottomBarScreens.Classroom.route) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            inclusive = true
-                        }
-                    }
+                onNavigateToTeacher = {
+                    navController.navigate(Screens.Teacher.route)
                 },
                 onNavigateToSignIn = {
                     navController.navigate(Screens.SignIn.route)
