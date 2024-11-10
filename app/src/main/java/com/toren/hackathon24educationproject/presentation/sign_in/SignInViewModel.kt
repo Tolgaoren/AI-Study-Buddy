@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.toren.hackathon24educationproject.domain.model.Classroom
 import com.toren.hackathon24educationproject.domain.model.Resource
 import com.toren.hackathon24educationproject.domain.model.Student
+import com.toren.hackathon24educationproject.domain.model.Teacher
 import com.toren.hackathon24educationproject.domain.repository.AuthRepository
 import com.toren.hackathon24educationproject.domain.repository.FirestoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +25,8 @@ class SignInViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val firestoreRepository: FirestoreRepository,
     private val student: Student,
-    private var classroom: Classroom
+    private var classroom: Classroom,
+    private val teacher: Teacher
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(SignInContract.UiState())
@@ -87,11 +89,35 @@ class SignInViewModel @Inject constructor(
                 getClassroom()
         }
             is Resource.Error -> {
+                getTeacher()
                 Log.d("TAG", "getUserInfo: ${result.message}")
                 updateUiState { copy(isLoading = false) }
             }
         }
 
+    }
+
+    private fun getTeacher() = viewModelScope.launch {
+        when(val result = firestoreRepository.getTeacher()) {
+            is Resource.Loading -> updateUiState { copy(isLoading = true) }
+            is Resource.Success -> {
+                teacher.id = result.data?.id ?: ""
+                teacher.fullName = result.data?.fullName ?: ""
+                teacher.classrooms = result.data?.classrooms ?: listOf()
+
+                classroom.id = teacher.classrooms[0].id
+                classroom.name = teacher.classrooms[0].name
+                classroom.teacherIds = teacher.classrooms[0].teacherIds
+                classroom.grade = teacher.classrooms[0].grade
+                classroom.subjects = teacher.classrooms[0].subjects
+                classroom.studentIds = teacher.classrooms[0].studentIds
+
+            }
+            is Resource.Error -> {
+                Log.d("TAG", "getTeacher: ${result.message}")
+                updateUiState { copy(isLoading = false) }
+            }
+        }
     }
 
     private fun getClassroom() = viewModelScope.launch {

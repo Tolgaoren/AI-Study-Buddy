@@ -1,12 +1,16 @@
 package com.toren.hackathon24educationproject.presentation.teacher
 
 import android.widget.Toast
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
+import com.toren.hackathon24educationproject.presentation.classroom.ClassroomContent
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -29,4 +33,10 @@ fun TeacherScreen(
             }
         }
     }
+    ClassroomContent(
+        students = uiState.students,
+        subjects = uiState.subjects,
+        onSubjectClick = {},
+        subjectTitle = "Konular"
+    )
 }

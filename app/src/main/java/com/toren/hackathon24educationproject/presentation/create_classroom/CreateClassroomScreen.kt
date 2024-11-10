@@ -38,8 +38,8 @@ fun CreateClassroomScreen(
     uiState: CreateClassroomContract.UiState,
     uiEffect: Flow<CreateClassroomContract.UiEffect>,
     uiEvent: (CreateClassroomContract.UiEvent) -> Unit,
+    onNavigateToTeacher: () -> Unit,
     onNavigateToSignIn: () -> Unit,
-    onNavigateToClassroom: () -> Unit,
     onNavigateToSignUp: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -51,7 +51,7 @@ fun CreateClassroomScreen(
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             uiEffect.collect { effect ->
                 when (effect) {
-                    is CreateClassroomContract.UiEffect.NavigateToClassroom -> onNavigateToClassroom()
+                    is CreateClassroomContract.UiEffect.NavigateToTeacher -> onNavigateToTeacher()
                     is CreateClassroomContract.UiEffect.NavigateToSignIn -> onNavigateToSignIn()
                     is CreateClassroomContract.UiEffect.NavigateToSignUp -> onNavigateToSignUp()
                     is CreateClassroomContract.UiEffect.ShowToast -> Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()

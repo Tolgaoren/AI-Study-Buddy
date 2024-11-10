@@ -1,6 +1,9 @@
 package com.toren.hackathon24educationproject.presentation.teacher
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.toren.hackathon24educationproject.domain.model.Classroom
+import com.toren.hackathon24educationproject.domain.model.Resource
 import com.toren.hackathon24educationproject.domain.repository.AuthRepository
 import com.toren.hackathon24educationproject.domain.repository.FirestoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,13 +14,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TeacherViewModel
 @Inject constructor(
     private val firestoreRepository: FirestoreRepository,
-    private val authRepository: AuthRepository,
+    private val classroom: Classroom,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TeacherContract.UiState())
@@ -26,10 +30,49 @@ class TeacherViewModel
     private val _uiEffect by lazy { Channel<TeacherContract.UiEffect>() }
     val uiEffect: Flow<TeacherContract.UiEffect> by lazy { _uiEffect.receiveAsFlow() }
 
+    init {
+        val subjects = classroom.subjects
+        updateUiState { copy(subjects = subjects) }
+        getStudents()
+    }
+
     fun onEvent(event: TeacherContract.UiEvent) {
         when (event) {
-            is TeacherContract.UiEvent.AddSubject -> {}
+            is TeacherContract.UiEvent.AddSubject -> {
+                updateUiState { copy(subjects = subjects + event.subject) }
+            }
         }
+    }
+
+    private fun getStudents() = viewModelScope.launch {
+        updateUiState { copy(isLoading = true) }
+        when (val result = firestoreRepository.getStudents()) {
+            is Resource.Error -> updateUiState {
+                copy(
+                    error = result.message,
+                    isLoading = false,
+                )
+            }
+
+            is Resource.Loading -> updateUiState { copy(isLoading = true) }
+
+            is Resource.Success -> updateUiState {
+                copy(
+                    students = result.data?.sortedByDescending { it.level }?.map {
+                        it.copy(
+                            level = it.level / 100
+                        )
+
+                    } ?: emptyList(),
+                    isLoading = false,
+                )
+            }
+        }
+    }
+
+    private fun onAddSubjectClick() = viewModelScope.launch {
+        updateUiState { copy(isLoading = true) }
+
     }
 
     private fun updateUiState(block: TeacherContract.UiState.() -> TeacherContract.UiState) {

@@ -3,6 +3,7 @@ package com.toren.hackathon24educationproject.presentation.create_classroom
 object CreateClassroomContract {
     data class UiState(
         val isLoading: Boolean = false,
+        val classroomId: String = "",
         val classroomName: String = "",
         val teacherName: String = "",
         val email: String = "",
@@ -24,7 +25,7 @@ object CreateClassroomContract {
     }
     sealed class UiEffect {
         data class ShowToast(val message: String) : UiEffect()
-        data object NavigateToClassroom : UiEffect()
+        data object NavigateToTeacher : UiEffect()
         data object NavigateToSignIn : UiEffect()
         data object NavigateToSignUp : UiEffect()
     }

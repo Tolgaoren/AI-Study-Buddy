@@ -47,9 +47,14 @@ class CreateClassroomViewModel @Inject constructor(
     }
 
     private fun createClassroom() = viewModelScope.launch {
-        println(classroom)
-        updateUiState { copy(isLoading = true) }
-        classroom.id = "c" + System.currentTimeMillis().toString()
+        val cid = "c" + System.currentTimeMillis().toString()
+        updateUiState {
+            copy(
+                isLoading = true,
+                classroomId = cid
+            )
+        }
+        classroom.id = cid
         classroom.name = uiState.value.classroomName
         classroom.grade = uiState.value.grade
         when (val result = firestoreRepository.createClassroom()) {
@@ -93,6 +98,12 @@ class CreateClassroomViewModel @Inject constructor(
         teacher.id = authRepository.getUserUid()
         teacher.fullName = uiState.value.teacherName
         teacher.classrooms = listOf(classroom)
+
+        classroom.name = uiState.value.classroomName
+        classroom.grade = uiState.value.grade
+        classroom.id = uiState.value.classroomId
+        classroom.teacherIds = listOf(teacher.id)
+
         when (val result = firestoreRepository.saveTeacher()) {
             is Resource.Loading -> updateUiState { copy(isLoading = true) }
             is Resource.Success -> {
@@ -110,6 +121,8 @@ class CreateClassroomViewModel @Inject constructor(
         when (val result = firestoreRepository.getTeacher()) {
             is Resource.Loading -> updateUiState { copy(isLoading = true) }
             is Resource.Success -> {
+                teacher = result.data!!
+                println(teacher)
                 getClassroom()
             }
             is Resource.Error -> {
@@ -127,7 +140,7 @@ class CreateClassroomViewModel @Inject constructor(
             is Resource.Success -> {
                 classroom = result.data!!
                 println(classroom)
-                emitUiEffect(CreateClassroomContract.UiEffect.NavigateToClassroom)
+                emitUiEffect(CreateClassroomContract.UiEffect.NavigateToTeacher)
             }
             is Resource.Error -> {
                 emitUiEffect(CreateClassroomContract.UiEffect.ShowToast(result.message.toString()))
