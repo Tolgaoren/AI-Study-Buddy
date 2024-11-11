@@ -58,6 +58,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
         Screens.SignIn.route,
         Screens.SignUp.route,
         Screens.CreateClassroom.route,
+        Screens.Teacher.route
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()

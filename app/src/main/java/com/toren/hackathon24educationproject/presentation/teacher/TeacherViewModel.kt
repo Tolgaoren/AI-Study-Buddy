@@ -1,5 +1,6 @@
 package com.toren.hackathon24educationproject.presentation.teacher
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.toren.hackathon24educationproject.domain.model.Classroom
@@ -47,25 +48,30 @@ class TeacherViewModel
     private fun getStudents() = viewModelScope.launch {
         updateUiState { copy(isLoading = true) }
         when (val result = firestoreRepository.getStudents()) {
-            is Resource.Error -> updateUiState {
-                copy(
-                    error = result.message,
-                    isLoading = false,
-                )
-            }
-
             is Resource.Loading -> updateUiState { copy(isLoading = true) }
 
-            is Resource.Success -> updateUiState {
-                copy(
-                    students = result.data?.sortedByDescending { it.level }?.map {
-                        it.copy(
-                            level = it.level / 100
-                        )
+            is Resource.Success -> {
+                Log.d("TeacherViewModel", "getStudents: ${result.data}")
+                updateUiState {
+                    copy(
+                        students = result.data?.sortedByDescending { it.level }?.map {
+                            it.copy(
+                                level = it.level / 100
+                            )
 
-                    } ?: emptyList(),
-                    isLoading = false,
-                )
+                        } ?: emptyList(),
+                        isLoading = false,
+                    )
+                }
+            }
+            is Resource.Error -> {
+                Log.d("TAG", "getStudents: ${result.message}")
+                updateUiState {
+                    copy(
+                        error = result.message,
+                        isLoading = false,
+                    )
+                }
             }
         }
     }

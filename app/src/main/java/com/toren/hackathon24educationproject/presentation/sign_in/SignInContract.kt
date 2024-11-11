@@ -21,6 +21,7 @@ object SignInContract {
         data object NavigateToClassroom : UiEffect()
         data object NavigateToSignUp : UiEffect()
         data object NavigateToCreateClassroom : UiEffect()
+        data object NavigateToTeacher : UiEffect()
     }
 
 }

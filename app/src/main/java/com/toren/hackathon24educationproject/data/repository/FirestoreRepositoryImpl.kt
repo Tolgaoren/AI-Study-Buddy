@@ -1,6 +1,5 @@
 package com.toren.hackathon24educationproject.data.repository
 
-import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
 import com.toren.hackathon24educationproject.domain.model.Classroom
@@ -42,7 +41,6 @@ class FirestoreRepositoryImpl @Inject constructor(
                 .get()
                 .await()
             val data = document.toObject<Student>()
-            Log.d("Student", data.toString())
             return Resource.Success(data!!)
 
         } catch (e: Exception) {
@@ -53,9 +51,10 @@ class FirestoreRepositoryImpl @Inject constructor(
     override suspend fun getStudents(): Resource<List<Student>> {
         try {
             val querySnapshot = firestore.collection("students")
-                .whereEqualTo("classroomId", student.classroomId)
+                .whereEqualTo("classroomId", classroom.id)
                 .get()
                 .await()
+            println(querySnapshot.documents.size)
             val studentList = querySnapshot.documents.map { document ->
                 document.toObject(Student::class.java)!!
             }
@@ -91,7 +90,6 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun getClassroom(): Resource<Classroom> {
         try {
-            println("classroom id : ${classroom.id}")
             val document = firestore.collection("classrooms")
                 .document(classroom.id)
                 .get()
@@ -128,11 +126,10 @@ class FirestoreRepositoryImpl @Inject constructor(
     override suspend fun getTeacher(): Resource<Teacher> {
         try {
             val document = firestore.collection("teachers")
-                .document(teacher.id)
+                .document(authRepository.getUserUid())
                 .get()
                 .await()
             val data = document.toObject<Teacher>()
-            Log.d("Teacher", data.toString())
             return Resource.Success(data!!)
         } catch (e: Exception) {
             return Resource.Error(e.message ?: "Unknown error occurred")

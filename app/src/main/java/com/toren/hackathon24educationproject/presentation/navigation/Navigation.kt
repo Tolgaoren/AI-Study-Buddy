@@ -107,6 +107,9 @@ fun Navigation(
                 },
                 onNavigateToCreateClassroom = {
                     navController.navigate(Screens.CreateClassroom.route)
+                },
+                onNavigateToTeacher = {
+                    navController.navigate(Screens.Teacher.route)
                 }
             )
         }

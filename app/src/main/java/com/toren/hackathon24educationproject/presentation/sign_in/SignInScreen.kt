@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -31,12 +30,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.toren.hackathon24educationproject.R
 import kotlinx.coroutines.flow.Flow
@@ -49,6 +45,7 @@ fun SignInScreen(
     onNavigateToSignUp: () -> Unit,
     onNavigateToClassroom: () -> Unit,
     onNavigateToCreateClassroom: () -> Unit,
+    onNavigateToTeacher: () -> Unit
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -71,6 +68,10 @@ fun SignInScreen(
 
                     is SignInContract.UiEffect.NavigateToCreateClassroom -> {
                         onNavigateToCreateClassroom()
+                    }
+
+                    is SignInContract.UiEffect.NavigateToTeacher -> {
+                        onNavigateToTeacher()
                     }
                 }
             }
@@ -218,20 +219,4 @@ fun EmailPasswordForm(
             }
         }
     }
-}
-
-@Preview
-@Composable
-private fun SignInPreview() {
-    val viewModel: SignInViewModel = hiltViewModel()
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val uiEffect = viewModel.uiEffect
-    SignInScreen(
-        uiState = uiState,
-        uiEffect = uiEffect,
-        uiEvent = viewModel::onEvent,
-        onNavigateToSignUp = { /*TODO*/ },
-        onNavigateToClassroom = { /*TODO*/ },
-        onNavigateToCreateClassroom = { /*TODO*/ }
-    )
 }

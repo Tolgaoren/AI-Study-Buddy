@@ -2,8 +2,10 @@ package com.toren.hackathon24educationproject.presentation.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.toren.hackathon24educationproject.domain.model.Classroom
 import com.toren.hackathon24educationproject.domain.model.Resource
 import com.toren.hackathon24educationproject.domain.model.Student
+import com.toren.hackathon24educationproject.domain.model.Teacher
 import com.toren.hackathon24educationproject.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -19,7 +21,9 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val student: Student,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val classroom: Classroom,
+    private val teacher: Teacher
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileContract.UiState())
@@ -64,10 +68,17 @@ class ProfileViewModel @Inject constructor(
                 is Resource.Loading -> updateUiState { copy(isLoading = true) }
                 is Resource.Success -> {
                     updateUiState { copy(isLoading = false) }
+                    updateObjects()
                     emitUiEffect(ProfileContract.UiEffect.GoToLoginScreen)
                 }
             }
         }
+    }
+
+    private fun updateObjects() {
+        student.reset()
+        classroom.reset()
+        teacher.reset()
     }
 
     private fun updateUiState(block: ProfileContract.UiState.() -> ProfileContract.UiState) {

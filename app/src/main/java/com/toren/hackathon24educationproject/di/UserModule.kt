@@ -2,6 +2,7 @@ package com.toren.hackathon24educationproject.di
 
 import com.toren.hackathon24educationproject.domain.model.Classroom
 import com.toren.hackathon24educationproject.domain.model.History
+import com.toren.hackathon24educationproject.domain.model.Role
 import com.toren.hackathon24educationproject.domain.model.Student
 import com.toren.hackathon24educationproject.domain.model.Teacher
 import dagger.Module

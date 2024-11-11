@@ -8,4 +8,15 @@ data class Student(
     var badges: List<Int> = listOf(),
     var historyId: Int = 0,
     var avatar: Int = 1
-)
+){
+    fun reset() {
+        id = ""
+        fullName = ""
+        classroomId = ""
+        level = 0
+        badges = listOf()
+        historyId = 0
+        avatar = 1
+    }
+}
+

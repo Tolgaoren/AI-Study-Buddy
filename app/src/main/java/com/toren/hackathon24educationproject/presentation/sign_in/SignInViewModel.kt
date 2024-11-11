@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.toren.hackathon24educationproject.domain.model.Classroom
 import com.toren.hackathon24educationproject.domain.model.Resource
+import com.toren.hackathon24educationproject.domain.model.Role
 import com.toren.hackathon24educationproject.domain.model.Student
 import com.toren.hackathon24educationproject.domain.model.Teacher
 import com.toren.hackathon24educationproject.domain.repository.AuthRepository
@@ -34,6 +35,8 @@ class SignInViewModel @Inject constructor(
 
     private val _uiEffect by lazy { Channel<SignInContract.UiEffect>() }
     val uiEffect: Flow<SignInContract.UiEffect> by lazy { _uiEffect.receiveAsFlow() }
+
+    private var role: Role? = null
 
     init {
         updateUiState { copy(isLoading = true) }
@@ -74,17 +77,19 @@ class SignInViewModel @Inject constructor(
             }
         }
     }
+
     private fun getUserInfo() = viewModelScope.launch {
         when(val result = firestoreRepository.getStudent()) {
             is Resource.Loading -> updateUiState { copy(isLoading = true) }
 
             is Resource.Success -> {
+                role = Role.STUDENT
                 updateStudent(result.data?: Student())
                 getClassroom()
         }
             is Resource.Error -> {
                 Log.d("TAG", "getUserInfo: ${result.message}")
-                updateUiState { copy(isLoading = false) }
+                updateUiState { copy(isLoading = true) }
                 getTeacher()
             }
         }
@@ -95,10 +100,9 @@ class SignInViewModel @Inject constructor(
         when(val result = firestoreRepository.getTeacher()) {
             is Resource.Loading -> updateUiState { copy(isLoading = true) }
             is Resource.Success -> {
-                println("teacher data : ${result.data}")
-                teacher.id = result.data?.id ?: ""
-                teacher.fullName = result.data?.fullName ?: ""
-                teacher.classroomIds = result.data?.classroomIds ?: listOf()
+                role = Role.TEACHER
+                updateTeacher(result.data?: Teacher())
+                updateClassroomId()
                 getClassroom()
             }
             is Resource.Error -> {
@@ -112,12 +116,8 @@ class SignInViewModel @Inject constructor(
         when (val result = firestoreRepository.getClassroom()) {
             is Resource.Loading -> updateUiState { copy(isLoading = true) }
             is Resource.Success -> {
-                classroom.id = result.data?.id ?: ""
-                classroom.name = result.data?.name ?: ""
-                classroom.subjects = result.data?.subjects ?: listOf()
-                classroom.grade = result.data?.grade ?: 1
-
-                emitUiEffect(SignInContract.UiEffect.NavigateToClassroom)
+                updateClassroom(result.data?: Classroom())
+                navigate()
             }
 
             is Resource.Error -> {
@@ -127,6 +127,13 @@ class SignInViewModel @Inject constructor(
         }
     }
 
+    private fun navigate() = viewModelScope.launch {
+        if (role == Role.STUDENT) {
+            emitUiEffect(SignInContract.UiEffect.NavigateToClassroom)
+        } else if (role == Role.TEACHER) {
+            emitUiEffect(SignInContract.UiEffect.NavigateToTeacher)
+        }
+    }
 
     private fun signUp() = viewModelScope.launch {
         emitUiEffect(SignInContract.UiEffect.NavigateToSignUp)
@@ -144,6 +151,26 @@ class SignInViewModel @Inject constructor(
         student.avatar = result.avatar
         student.badges = result.badges
         classroom.id = result.classroomId
+    }
+
+    private fun updateTeacher(result: Teacher) {
+        teacher.id = result.id
+        teacher.fullName = result.fullName
+        teacher.classroomIds = result.classroomIds
+        classroom.id = result.classroomIds[0]
+    }
+
+    private fun updateClassroomId() {
+        classroom.id = teacher.classroomIds[0]
+    }
+
+    private fun updateClassroom(result: Classroom) {
+        classroom.id = result.id
+        classroom.name = result.name
+        classroom.grade = result.grade
+        classroom.subjects = result.subjects
+        classroom.teacherIds = result.teacherIds
+        classroom.studentIds = result.studentIds
     }
 
     private fun updateUiState(block: SignInContract.UiState.() -> SignInContract.UiState) {
