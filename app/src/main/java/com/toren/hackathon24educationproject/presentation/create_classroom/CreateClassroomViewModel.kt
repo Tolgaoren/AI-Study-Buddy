@@ -97,7 +97,7 @@ class CreateClassroomViewModel @Inject constructor(
         updateUiState { copy(isLoading = true) }
         teacher.id = authRepository.getUserUid()
         teacher.fullName = uiState.value.teacherName
-        teacher.classrooms = listOf(classroom)
+        teacher.classroomIds = listOf(classroom.id)
 
         classroom.name = uiState.value.classroomName
         classroom.grade = uiState.value.grade

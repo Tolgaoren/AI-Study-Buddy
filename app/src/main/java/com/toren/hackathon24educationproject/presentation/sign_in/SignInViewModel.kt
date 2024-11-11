@@ -79,19 +79,13 @@ class SignInViewModel @Inject constructor(
             is Resource.Loading -> updateUiState { copy(isLoading = true) }
 
             is Resource.Success -> {
-                student.id = result.data?.id ?: authRepository.getUserUid()
-                student.fullName = result.data?.fullName ?: ""
-                student.classroomId = result.data?.classroomId ?: ""
-                student.level = result.data?.level ?: 0
-                student.avatar = result.data?.avatar ?: 1
-                student.badges = result.data?.badges ?: listOf()
-                classroom.id = result.data?.classroomId ?: ""
+                updateStudent(result.data?: Student())
                 getClassroom()
         }
             is Resource.Error -> {
-                getTeacher()
                 Log.d("TAG", "getUserInfo: ${result.message}")
                 updateUiState { copy(isLoading = false) }
+                getTeacher()
             }
         }
 
@@ -101,17 +95,11 @@ class SignInViewModel @Inject constructor(
         when(val result = firestoreRepository.getTeacher()) {
             is Resource.Loading -> updateUiState { copy(isLoading = true) }
             is Resource.Success -> {
+                println("teacher data : ${result.data}")
                 teacher.id = result.data?.id ?: ""
                 teacher.fullName = result.data?.fullName ?: ""
-                teacher.classrooms = result.data?.classrooms ?: listOf()
-
-                classroom.id = teacher.classrooms[0].id
-                classroom.name = teacher.classrooms[0].name
-                classroom.teacherIds = teacher.classrooms[0].teacherIds
-                classroom.grade = teacher.classrooms[0].grade
-                classroom.subjects = teacher.classrooms[0].subjects
-                classroom.studentIds = teacher.classrooms[0].studentIds
-
+                teacher.classroomIds = result.data?.classroomIds ?: listOf()
+                getClassroom()
             }
             is Resource.Error -> {
                 Log.d("TAG", "getTeacher: ${result.message}")
@@ -146,6 +134,16 @@ class SignInViewModel @Inject constructor(
 
     private fun createClassroom() = viewModelScope.launch {
         emitUiEffect(SignInContract.UiEffect.NavigateToCreateClassroom)
+    }
+
+    private fun updateStudent(result: Student) {
+        student.id = result.id
+        student.fullName = result.fullName
+        student.classroomId = result.classroomId
+        student.level = result.level
+        student.avatar = result.avatar
+        student.badges = result.badges
+        classroom.id = result.classroomId
     }
 
     private fun updateUiState(block: SignInContract.UiState.() -> SignInContract.UiState) {

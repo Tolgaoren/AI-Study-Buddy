@@ -89,6 +89,7 @@ class SignUpViewModel @Inject constructor(
             }
             is Resource.Success -> {
                 Log.d("Student", result.data.toString() )
+                classroom.id = uiState.value.classroomCode
                 getClassroom()
             }
             is Resource.Error -> {

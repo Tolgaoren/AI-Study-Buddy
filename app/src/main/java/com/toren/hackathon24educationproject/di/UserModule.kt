@@ -43,7 +43,7 @@ object UserModule {
     fun provideTeacher() : Teacher = Teacher(
         id = "",
         fullName = "",
-        classrooms = listOf()
+        classroomIds = listOf()
     )
 
     @Provides

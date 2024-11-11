@@ -91,6 +91,7 @@ class FirestoreRepositoryImpl @Inject constructor(
 
     override suspend fun getClassroom(): Resource<Classroom> {
         try {
+            println("classroom id : ${classroom.id}")
             val document = firestore.collection("classrooms")
                 .document(classroom.id)
                 .get()
