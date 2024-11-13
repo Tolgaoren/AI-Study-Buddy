@@ -18,7 +18,7 @@ object ProfileContract {
     }
     sealed class UiEffect {
         data class ShowToast(val message: String) : UiEffect()
-        data object GoToLoginScreen : UiEffect()
+        data object NavigateToLoginScreen : UiEffect()
     }
 
 }

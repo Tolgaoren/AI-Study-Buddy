@@ -56,7 +56,7 @@ fun ProfileScreen(
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             uiEffect.collect { effect ->
                 when (effect) {
-                    is ProfileContract.UiEffect.GoToLoginScreen -> onNavigateToSignIn()
+                    is ProfileContract.UiEffect.NavigateToLoginScreen -> onNavigateToSignIn()
                     is ProfileContract.UiEffect.ShowToast -> {
                         Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
                     }
@@ -88,30 +88,37 @@ fun ProfileScreen(
             BadgeGrid(badges = uiState.badges)
         }
         item {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                GradientButton(
-                    text = "Çıkış yap",
-                    textColor = TextBlack,
-                    gradient = Brush.radialGradient(
-                        listOf(
-                            Purple80,
-                            PurpleGrey80
-                        )
-                    ),
-                    onClick = {
-                        uiEvent(ProfileContract.UiEvent.SignOutClick)
-                    }
-                )
-            }
+            SignOutButton(
+                onSignOutClick = {
+                    uiEvent(ProfileContract.UiEvent.SignOutClick)
+                }
+            )
         }
-
     }
+}
 
+@Composable
+fun SignOutButton(
+    onSignOutClick: () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        GradientButton(
+            text = "Çıkış yap",
+            textColor = TextBlack,
+            gradient = Brush.radialGradient(
+                listOf(
+                    Purple80,
+                    PurpleGrey80
+                )
+            ),
+            onClick = onSignOutClick
+        )
+    }
 }
 
 @Composable

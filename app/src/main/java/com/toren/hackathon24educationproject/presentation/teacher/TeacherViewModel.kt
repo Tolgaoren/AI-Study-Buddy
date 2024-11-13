@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.toren.hackathon24educationproject.domain.model.Classroom
 import com.toren.hackathon24educationproject.domain.model.Resource
+import com.toren.hackathon24educationproject.domain.model.Teacher
+import com.toren.hackathon24educationproject.domain.repository.AuthRepository
 import com.toren.hackathon24educationproject.domain.repository.FirestoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -21,7 +23,9 @@ import javax.inject.Inject
 class TeacherViewModel
 @Inject constructor(
     private val firestoreRepository: FirestoreRepository,
+    private val authRepository: AuthRepository,
     private val classroom: Classroom,
+    private val teacher: Teacher
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TeacherContract.UiState())
@@ -38,9 +42,11 @@ class TeacherViewModel
 
     fun onEvent(event: TeacherContract.UiEvent) {
         when (event) {
-            is TeacherContract.UiEvent.AddSubject -> {
+            is TeacherContract.UiEvent.AddSubjectClick -> {
                 updateUiState { copy(subjects = subjects + event.subject) }
             }
+
+            is TeacherContract.UiEvent.SignOutClick -> signOut()
         }
     }
 
@@ -73,6 +79,27 @@ class TeacherViewModel
                 }
             }
         }
+    }
+
+    private fun signOut() {
+        viewModelScope.launch {
+            when (val result =authRepository.signOut()) {
+                is Resource.Loading -> {
+                    updateUiState { copy(isLoading = true) }
+                }
+                is Resource.Success -> {
+                    updateUiState { copy(isLoading = false) }
+                    updateObjects()
+                    emitUiEffect(TeacherContract.UiEffect.NavigateToLoginScreen)
+                }
+                is Resource.Error -> emitUiEffect(TeacherContract.UiEffect.ShowToast(result.message ?: ""))
+            }
+        }
+    }
+
+    private fun updateObjects() {
+        classroom.reset()
+        teacher.reset()
     }
 
     private fun onAddSubjectClick() = viewModelScope.launch {

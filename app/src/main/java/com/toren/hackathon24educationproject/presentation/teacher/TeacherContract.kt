@@ -11,10 +11,12 @@ object TeacherContract {
     )
 
     sealed class UiEvent {
-        data class AddSubject(val subject: String) : UiEvent()
+        data class AddSubjectClick(val subject: String) : UiEvent()
+        data object SignOutClick : UiEvent()
     }
 
     sealed class UiEffect {
         data class ShowToast(val message: String) : UiEffect()
+        data object NavigateToLoginScreen : UiEffect()
     }
 }

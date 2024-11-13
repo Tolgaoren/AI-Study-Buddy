@@ -191,7 +191,13 @@ fun Navigation(
             TeacherScreen(
                 uiState = uiState,
                 uiEffect = uiEffect,
-                uiEvent = viewModel::onEvent
+                uiEvent = viewModel::onEvent,
+                onNavigateToSignIn = {
+                    navController.navigate(Screens.SignIn.route) {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
             )
         }
     }

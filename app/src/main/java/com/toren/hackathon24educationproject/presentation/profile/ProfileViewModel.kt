@@ -69,7 +69,7 @@ class ProfileViewModel @Inject constructor(
                 is Resource.Success -> {
                     updateUiState { copy(isLoading = false) }
                     updateObjects()
-                    emitUiEffect(ProfileContract.UiEffect.GoToLoginScreen)
+                    emitUiEffect(ProfileContract.UiEffect.NavigateToLoginScreen)
                 }
             }
         }
