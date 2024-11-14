@@ -104,7 +104,6 @@ class TeacherViewModel
 
     private fun onAddSubjectClick() = viewModelScope.launch {
         updateUiState { copy(isLoading = true) }
-
     }
 
     private fun updateUiState(block: TeacherContract.UiState.() -> TeacherContract.UiState) {
